@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7a2350">
+<title>יום ההתארגנות של שקד ואיל</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bellefair&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* layout: one column of booking tables, photographer first; header carries the day's fixed times and live status */
+  --bg:#f4f3f6;--surface:#ffffff;--ink:#1f1c27;--muted:#6c6777;--line:#e2dfe7;--accent:#7a2350;--accent-soft:#f4e7ee;
+  --mk:#b03f68;--mk-soft:#f8e4eb;--hr:#2b6d78;--hr-soft:#dcecee;--ot:#5a5f73;--ot-soft:#e8e9ef;--ph:#4a5296;--ph-soft:#e5e6f4;
+  --bad:#c0262d;--bad-soft:#fde8e8;--warn:#a05d00;--warn-soft:#fff1db;--good:#2b7a4b;--good-soft:#e1f2e7;
+  --display:"Bellefair","Frank Ruhl Libre",Georgia,serif;
+  --body:"IBM Plex Sans Hebrew","Assistant","Segoe UI",Arial,sans-serif;
+  --r:12px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#141218;--surface:#1d1a23;--ink:#ece8f2;--muted:#a39dae;--line:#322e3a;--accent:#e58bb4;--accent-soft:#3a2230;
+    --mk:#ea8dae;--mk-soft:#3d2230;--hr:#73c3cf;--hr-soft:#183539;--ot:#b4b8cc;--ot-soft:#2a2b35;--ph:#a2a9ef;--ph-soft:#252846;
+    --bad:#ff7d82;--bad-soft:#3d1b1e;--warn:#f2ad52;--warn-soft:#3a2a14;--good:#72d49d;--good-soft:#17352a;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+#app{max-width:860px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top)) 16px calc(56px + env(safe-area-inset-bottom))}
+h1,h2,h3{margin:0;text-wrap:balance}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,6vw,44px);line-height:1.1}
+h2{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.15;margin:34px 0 12px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+h2 small{font-family:var(--body);font-size:13px;color:var(--muted)}
+p{margin:0}
+.muted{color:var(--muted)}
+.eyebrow{margin:0 0 4px;color:var(--accent);font-weight:600;font-size:13px}
+.top{display:grid;gap:14px}
+.title-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.count{font-family:var(--display);font-size:24px;color:var(--accent);line-height:1}
+.times{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--muted)}
+.times b{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:600;margin-inline-end:5px;display:inline-block;direction:ltr}
+.times li.key b{color:var(--accent)}
+.status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;border-radius:999px;padding:4px 12px;background:var(--surface);border:1px solid var(--line);color:var(--muted);justify-self:start}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.status.ok{color:var(--good)}.status.ok i{background:var(--good)}
+.status.bad{background:var(--bad-soft);border-color:transparent;color:var(--bad)}.status.bad i{background:var(--bad)}
+.status.warn{background:var(--warn-soft);border-color:transparent;color:var(--warn)}.status.warn i{background:var(--warn)}
+.howto{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;display:grid;gap:4px;font-size:14px;margin-top:16px}
+.howto b{color:var(--accent)}
+/* issues */
+.issues{border-radius:var(--r);padding:12px 16px;margin-top:14px;font-size:14px}
+.issues.ok{background:var(--good-soft);color:var(--good)}
+.issues.has{background:var(--surface);border:1px solid var(--line)}
+.issues ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.issues li{display:flex;gap:10px;align-items:baseline}
+.sev{flex:none;font-size:12px;font-weight:600;border-radius:4px;padding:1px 8px}
+.s-bad{background:var(--bad-soft);color:var(--bad)}
+.s-warn{background:var(--warn-soft);color:var(--warn)}
+.issues a{color:inherit;text-underline-offset:3px;text-decoration-color:var(--line)}
+/* buttons & inputs */
+.btn{appearance:none;font:inherit;font-size:14px;font-weight:500;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;line-height:1.3;text-decoration:none}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.btn.ghost{border-color:transparent;background:none;color:var(--muted)}
+.btn.ghost:hover{color:var(--bad)}
+.btn.small{font-size:13px;padding:4px 10px}
+.btn.wide{width:100%;justify-content:center;padding:11px;border-style:dashed;color:var(--muted)}
+.btn.wide:hover{color:var(--accent);border-color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,select,textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:0;width:100%}
+input[type=time],input[type=number]{font-variant-numeric:tabular-nums}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+input::placeholder{color:var(--muted);opacity:.8}
+label.f{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);font-weight:500;min-width:0}
+/* table cards */
+.tcard{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:16px;--k:var(--ot);--ks:var(--ot-soft)}
+.tcard.mk{--k:var(--mk);--ks:var(--mk-soft)}
+.tcard.hr{--k:var(--hr);--ks:var(--hr-soft)}
+.tcard.ph{--k:var(--ph);--ks:var(--ph-soft)}
+.thead{background:var(--ks);border-top:4px solid var(--k);padding:12px 14px;display:grid;gap:10px}
+.thead .row1{display:grid;grid-template-columns:1.4fr 1fr auto;gap:8px;align-items:end}
+.thead .row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.thead input,.thead select{background:var(--surface)}
+.vname{font-weight:600;font-size:17px}
+.stats{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);align-items:center}
+.stats b{color:var(--ink);font-variant-numeric:tabular-nums}
+.vnote{font-size:14px}
+table{border-collapse:collapse;width:100%}
+th{font-size:12px;font-weight:600;color:var(--muted);text-align:start;padding:8px 14px;border-bottom:1px solid var(--line)}
+td{padding:7px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+td.tm{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;width:1%;direction:ltr;text-align:right}
+td.nt{width:1%;white-space:nowrap}
+tr.slot.taken td.tm{color:var(--k)}
+tr.slot.bad{background:var(--bad-soft)}
+tr.slot.warn{background:var(--warn-soft)}
+select.book{font-weight:500}
+select.book.free{color:var(--good)}
+select.book.brk{color:var(--muted);font-style:italic}
+.rmsg{font-size:12.5px;margin-top:4px;font-weight:500}
+tr.bad .rmsg{color:var(--bad)}
+tr.warn .rmsg{color:var(--warn)}
+.nbtn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:inherit;font-size:13px;border-radius:999px;padding:3px 10px;cursor:pointer;white-space:nowrap}
+.nbtn.has{color:var(--accent);border-color:var(--accent)}
+tr.notes td{padding-top:0;background:inherit}
+.nlist{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.nlist li{display:flex;gap:8px;align-items:baseline;font-size:14px;background:var(--bg);border-radius:8px;padding:5px 10px}
+.nlist li span{flex:1}
+.nlist small{color:var(--muted);font-size:11.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.nlist button{appearance:none;border:0;background:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px}
+.nlist button:hover{color:var(--bad)}
+.nadd{display:flex;gap:8px;margin-top:6px}
+.nadd input{flex:1}
+.empty{padding:16px 14px;color:var(--muted);font-size:14px}
+.orph{padding:10px 14px;border-top:1px solid var(--line);font-size:13px;color:var(--warn);display:grid;gap:6px}
+.orph div{display:flex;gap:8px;align-items:center;justify-content:space-between}
+.tfoot{display:flex;justify-content:flex-end;padding:6px 8px;border-top:1px solid var(--line)}
+/* photographer rows */
+.prow td input{background:transparent;border-color:transparent;padding:5px 6px}
+.prow td input:hover{border-color:var(--line)}
+.prow td input:focus{background:var(--bg)}
+.prow .tpair{display:flex;align-items:center;gap:4px;direction:ltr;justify-content:flex-end}
+.prow .tpair input{width:120px}
+/* people */
+.ptable td{padding:6px 8px}
+.ptable th{padding:8px}
+.ptable td:first-child,.ptable th:first-child{padding-inline-start:14px}
+.ptable input{padding:5px 8px}
+.ptable input[type=time]{width:120px}
+.table-scroll{overflow-x:auto;position:relative}
+.ptable{min-width:780px}
+/* schedule cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:12px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;gap:8px;align-content:start}
+.pcard header{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pcard h3{font-size:16px;font-weight:600}
+.pcard header small{color:var(--muted);font-size:12.5px}
+.plist{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:14px}
+.plist li{display:grid;grid-template-columns:96px 1fr;gap:8px}
+.plist .t{font-variant-numeric:tabular-nums;font-weight:600;direction:ltr;text-align:right}
+.plist li.bad{color:var(--bad)}
+.pcard footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:6px}
+.pcard.none{opacity:.75}
+.export{margin-top:16px;display:grid;gap:8px}
+.export textarea{min-height:220px;font-size:13.5px;line-height:1.55}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+input[type=checkbox]{width:18px;height:18px;padding:0;margin:0;flex:none;accent-color:var(--good);cursor:pointer}
+.ck{display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;white-space:nowrap}
+.checks{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.pcard .arr{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.pcard .arr input{width:120px;padding:4px 8px}
+.donebadge{display:inline-block;margin-top:4px;font-size:12.5px;font-weight:600;color:var(--good)}
+tr.slot.done td.tm{color:var(--good)}
+td.c{text-align:center}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:560px){
+  .thead .row1{grid-template-columns:1fr 1fr}
+  .thead .row1 .kind{grid-column:1/-1}
+  td{padding:7px 10px}
+  th{padding:8px 10px}
+  .plist li{grid-template-columns:90px 1fr}
+  .prow .tpair{flex-direction:column;align-items:stretch;gap:2px}
+  .prow .tpair span{display:none}
+  .prow .tpair input{width:108px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app"><p style="padding:24px;color:#6c6777">טוען…</p></div>
+<script>
+(function(){
+"use strict";
+
+/* ===== הגדרות ===== */
+const DB_URL = "https://ebmathgame-default-rtdb.europe-west1.firebasedatabase.app";
+const ROOT = "weddingPrep/v1";
+const LS_KEY = "weddingPrep-local-v1";
+const WEDDING = new Date(2026, 10, 10);
+const BREAK = "_break";
+const KINDS = { makeup: { label: "איפור", cls: "mk" }, hair: { label: "שיער", cls: "hr" }, other: { label: "אחר", cls: "ot" } };
+
+const SEED = {
+  info: { title: "יום ההתארגנות של שקד ואיל", date: "יום שלישי · 10.11.2026", leave: "17:30–18:00", reception: "19:30" },
+  photo: {
+    r1: { start: "14:30", end: "15:00", label: "צילומי כלה", order: 1 },
+    r2: { start: "15:00", end: "15:10", label: "מפגש חתן וכלה", order: 2 },
+    r3: { start: "15:10", end: "17:00", label: "צילומי זוגיות בחוץ", order: 3 }
+  },
+  people: {
+    shaked:  { name: "שקד",   role: "כלה",       arrive: "",      readyBy: "14:15", order: 1 },
+    ayeli:   { name: "איילי",  role: "אחות הכלה", arrive: "",      readyBy: "18:00", order: 2 },
+    agam:    { name: "אגם",   role: "אחות הכלה", arrive: "",      readyBy: "18:00", order: 3 },
+    inbar:   { name: "ענבר",  role: "אחות הכלה", arrive: "",      readyBy: "18:00", order: 4 },
+    libi:    { name: "ליבי",  role: "אחות הכלה", arrive: "",      readyBy: "18:00", order: 5 },
+    tamar:   { name: "תמר",   role: "אחות הכלה", arrive: "",      readyBy: "18:00", order: 6 },
+    hani:    { name: "חני",   role: "אם הכלה",   arrive: "13:30", readyBy: "18:00", order: 7 },
+    idit:    { name: "עדית",  role: "אמא",       arrive: "13:30", readyBy: "18:00", order: 8 },
+    shlomit: { name: "שלומית", role: "אם החתן",  arrive: "13:30", readyBy: "18:00", order: 9 },
+    adi:     { name: "עדי",   role: "אחות החתן", arrive: "14:00", readyBy: "18:00", order: 10 }
+  },
+  vendors: {
+    ayelet: { name: "איילת שילוני", role: "איפור", kind: "makeup", from: "10:00", to: "", dur: "", note: "לפי שקד: שקד (איפור כלה), איילי, תמר, חני", order: 1 },
+    noam:   { name: "נועם יצחקי",  role: "איפור", kind: "makeup", from: "", to: "", dur: "", note: "לפי שקד: ליבי, ענבר, אגם", order: 2 },
+    maayan: { name: "מעין סעדון",  role: "איפור", kind: "makeup", from: "", to: "", dur: "", note: "לפי שקד: עדית ושלומית, מגיעות 13:30", order: 3 },
+    vicky:  { name: "ויקי שאולוב", role: "עיצוב שיער", kind: "hair", from: "", to: "", dur: "", note: "שקד 10:00–12:00. לפי שקד גם: איילי, ליבי, תמר, עדית (עם העוזרת)", order: 4 },
+    vicky2: { name: "העוזרת של ויקי", role: "עיצוב שיער", kind: "hair", from: "", to: "", dur: "", note: "", order: 5 },
+    chen:   { name: "חן שקד", role: "תלתלים", kind: "hair", from: "", to: "", dur: "", note: "לפי שקד: אגם, ענבר, חני. עדי – בבדיקה", order: 6 }
+  }
+};
+
+/* ===== מצב ===== */
+let DATA = null;
+let mode = "connecting"; // live | poll | local | denied | offline
+let es = null, pollTimer = null, retryTimer = null;
+const openNotes = new Set();
+const app = document.getElementById("app");
+
+/* ===== עזרים ===== */
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+function toMin(t){ if (!t || !/^\d{1,2}:\d{2}/.test(t)) return null; const p = t.split(":"); return (+p[0]) * 60 + (+p[1]); }
+function toT(m){ m = Math.max(0, Math.min(1439, m)); return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); }
+const keyOf = m => "t" + toT(m).replace(":", "");
+const keyTime = k => k.slice(1, 3) + ":" + k.slice(3, 5);
+const rng = (a, b) => toT(a) + "–" + toT(b);
+const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+function ordered(o){ return Object.entries(o || {}).filter(([, v]) => v && typeof v === "object").sort((x, y) => (x[1].order || 0) - (y[1].order || 0) || (x[0] < y[0] ? -1 : 1)); }
+function getIn(o, parts){ for (const p of parts) { if (o == null) return undefined; o = o[p]; } return o; }
+function setIn(o, parts, val){
+  if (!parts.length) return val == null ? {} : val;
+  o = o || {}; let cur = o;
+  for (let i = 0; i < parts.length - 1; i++) { if (cur[parts[i]] == null || typeof cur[parts[i]] !== "object") cur[parts[i]] = {}; cur = cur[parts[i]]; }
+  const last = parts[parts.length - 1];
+  if (val == null) delete cur[last]; else cur[last] = val;
+  return o;
+}
+function nextOrder(o){ return ordered(o).reduce((m, [, v]) => Math.max(m, v.order || 0), 0) + 1; }
+function personName(id){ if (id === BREAK) return "הפסקה"; const p = DATA.people && DATA.people[id]; return p ? (p.name || "ללא שם") : "שם שנמחק"; }
+function vendorWhat(v){ return (v.role || (KINDS[v.kind] || KINDS.other).label) + " אצל " + (v.name || "ספקית ללא שם"); }
+function slotsOf(v){
+  const a = toMin(v.from), b = toMin(v.to), d = Number(v.dur);
+  if (a == null || b == null || !(d >= 5) || b <= a) return [];
+  const out = []; for (let t = a; t + d <= b && out.length < 80; t += d) out.push({ key: keyOf(t), start: t, end: t + d });
+  return out;
+}
+function daysLeft(){ const n = new Date(); return Math.round((WEDDING - new Date(n.getFullYear(), n.getMonth(), n.getDate())) / 86400000); }
+const plural = (n, one, many) => n === 1 ? one : n + " " + many;
+
+/* ===== ניתוח: התנגשויות ===== */
+function analyze(){
+  const issues = [], flags = {}, runsBy = {}, orphans = {};
+  function flag(keys, vid, sev, msg){ keys.forEach(k => { const id = vid + "|" + k; if (!flags[id] || flags[id].sev !== "bad") flags[id] = { sev, msg }; }); }
+  ordered(DATA.vendors).forEach(([vid, v]) => {
+    const slots = slotsOf(v), bk = (DATA.bookings || {})[vid] || {}, keys = new Set(slots.map(s => s.key));
+    let run = null;
+    const close = () => { if (run) (runsBy[run.pid] = runsBy[run.pid] || []).push(run); run = null; };
+    slots.forEach(s => {
+      const pid = bk[s.key];
+      if (pid && pid !== BREAK) {
+        if (run && run.pid === pid && run.end === s.start) { run.end = s.end; run.keys.push(s.key); }
+        else { close(); run = { pid, vid, v, start: s.start, end: s.end, keys: [s.key] }; }
+      } else close();
+    });
+    close();
+    const orph = Object.keys(bk).filter(k => !keys.has(k) && bk[k]);
+    if (orph.length) {
+      orphans[vid] = orph;
+      orph.forEach(k => issues.push({ sev: "warn", vid, text: (v.name || "ספקית") + ": התור של " + personName(bk[k]) + " ב־" + keyTime(k) + " כבר לא קיים אחרי שינוי השעות" }));
+    }
+  });
+  Object.entries(runsBy).forEach(([pid, runs]) => {
+    const p = (DATA.people || {})[pid] || {}, name = personName(pid);
+    runs.sort((x, y) => x.start - y.start);
+    for (let i = 0; i < runs.length; i++) for (let j = i + 1; j < runs.length; j++) {
+      const x = runs[i], y = runs[j];
+      if (x.vid !== y.vid && x.start < y.end && y.start < x.end) {
+        const t = name + ": " + vendorWhat(x.v) + " (" + rng(x.start, x.end) + ") באותו זמן כמו " + vendorWhat(y.v) + " (" + rng(y.start, y.end) + ")";
+        issues.push({ sev: "bad", vid: x.vid, text: t });
+        flag(x.keys, x.vid, "bad", "חופף ל" + vendorWhat(y.v) + " " + rng(y.start, y.end));
+        flag(y.keys, y.vid, "bad", "חופף ל" + vendorWhat(x.v) + " " + rng(x.start, x.end));
+      }
+    }
+    const arr = toMin(p.arrive), rdy = toMin(p.readyBy);
+    runs.forEach(r => {
+      if (arr != null && r.start < arr) { issues.push({ sev: "bad", vid: r.vid, text: name + ": " + vendorWhat(r.v) + " ב־" + toT(r.start) + ", אבל היא מגיעה רק ב־" + p.arrive }); flag(r.keys, r.vid, "bad", "מגיעה רק ב־" + p.arrive); }
+      if (rdy != null && r.end > rdy) { issues.push({ sev: "bad", vid: r.vid, text: name + ": " + vendorWhat(r.v) + " נגמר ב־" + toT(r.end) + ", אבל היא צריכה להיות מוכנה עד " + p.readyBy }); flag(r.keys, r.vid, "bad", "צריכה להיות מוכנה עד " + p.readyBy); }
+    });
+    if (arr != null && runs.length) {
+      const g0 = runs[0].start - arr;
+      if (g0 > 30) { issues.push({ sev: "warn", vid: runs[0].vid, text: name + ": מגיעה ב־" + p.arrive + " ומחכה " + g0 + " דק׳ עד התור הראשון" }); flag(runs[0].keys, runs[0].vid, "warn", "המתנה של " + g0 + " דק׳ מההגעה"); }
+      for (let k = 1; k < runs.length; k++) { const g = runs[k].start - runs[k - 1].end; if (g > 30) { issues.push({ sev: "warn", vid: runs[k].vid, text: name + ": מחכה " + g + " דק׳ בין התורים" }); flag(runs[k].keys, runs[k].vid, "warn", "המתנה של " + g + " דק׳ מהתור הקודם"); } }
+    }
+  });
+  issues.sort((x, y) => (x.sev === "bad" ? 0 : 1) - (y.sev === "bad" ? 0 : 1));
+  return { issues, flags, runsBy, orphans };
+}
+
+/* ===== תצוגה ===== */
+function statusHTML(){
+  const m = {
+    connecting: ["", "מתחבר…"],
+    live: ["ok", "מחובר · מתעדכן אצל כולם בזמן אמת"],
+    poll: ["ok", "מחובר · מתעדכן כל כמה שניות"],
+    local: ["warn", "מצב מקומי: השינויים נשמרים רק במכשיר הזה"],
+    denied: ["bad", "אין הרשאה למסד הנתונים (צריך לעדכן את הכללים ב־Firebase). השינויים נשמרים רק במכשיר הזה"],
+    offline: ["bad", "אין חיבור. שינויים שתעשי עכשיו לא יישמרו – מנסה להתחבר שוב…"]
+  }[mode];
+  return '<span class="status ' + m[0] + '" role="status"><i></i>' + m[1] + "</span>";
+}
+function header(){
+  const info = DATA.info || {}, d = daysLeft();
+  const cd = d > 1 ? "עוד " + d + " ימים" : d === 1 ? "מחר!" : d === 0 ? "היום!" : "";
+  const bride = (DATA.people || {}).shaked;
+  const ph = ordered(DATA.photo).map(([, r]) => r).filter(r => r.start).sort((a, b) => toMin(a.start) - toMin(b.start));
+  let times = bride && bride.readyBy ? '<li class="key"><b>' + esc(bride.readyBy) + "</b>שקד מוכנה לגמרי</li>" : "";
+  times += ph.map(r => { const dur = toMin(r.end) - toMin(r.start); return "<li><b>" + esc(dur > 0 && dur <= 15 ? r.start : r.start + "–" + r.end) + "</b>" + esc(r.label || "") + "</li>"; }).join("");
+  if (info.leave) times += "<li><b>" + esc(info.leave) + "</b>יציאה לאולם</li>";
+  if (info.reception) times += "<li><b>" + esc(info.reception) + "</b>קבלת פנים</li>";
+  return '<header class="top"><div class="title-row"><div><p class="eyebrow">' + esc(info.date || "") + "</p><h1>" + esc(info.title || "") + "</h1></div>" +
+    (cd ? '<div class="count">' + cd + "</div>" : "") + '</div><ul class="times">' + times + "</ul>" + statusHTML() + "</header>" +
+    '<div class="howto"><div><b>ספקיות:</b> כתבו את השם, מתי אתן מגיעות, מתי מסיימות ומשך תור ממוצע. טבלת התורים נבנית לבד.</div>' +
+    "<div><b>מתארגנות:</b> בוחרות את השם שלכן ליד תור פנוי. תור שכבר תפוס? מוסיפות הערה ומתאמות.</div>" +
+    "<div><b>שימו לב:</b> הדף מסמן באדום תור שחופף לתור אחר שלך (למשל איפור ושיער באותה שעה).</div></div>";
+}
+function issuesHTML(a){
+  if (!a.issues.length) return '<div class="issues ok"><b>אין התנגשויות.</b> אף אחת לא משובצת לשני טיפולים באותו זמן.</div>';
+  return '<div class="issues has"><ul>' + a.issues.map(it => '<li><span class="sev ' + (it.sev === "bad" ? "s-bad" : "s-warn") + '">' + (it.sev === "bad" ? "התנגשות" : "לתשומת לב") + '</span><a href="#v-' + esc(it.vid) + '">' + esc(it.text) + "</a></li>").join("") + "</ul></div>";
+}
+function photoHTML(){
+  const rows = ordered(DATA.photo);
+  return '<h2>צלם <small>הלו״ז גמיש לפי הצורך</small></h2><section class="tcard ph" id="photo"><table><thead><tr><th>שעה</th><th>מה מצלמים</th><th><span class="sr">מחיקה</span></th></tr></thead><tbody>' +
+    rows.map(([id, r]) => '<tr class="prow"><td><div class="tpair"><input type="time" step="300" id="ph-' + id + '-s" data-path="photo/' + id + '/start" value="' + esc(r.start) + '" aria-label="התחלה"><span>–</span><input type="time" step="300" id="ph-' + id + '-e" data-path="photo/' + id + '/end" value="' + esc(r.end) + '" aria-label="סיום"></div></td>' +
+      '<td><input type="text" id="ph-' + id + '-l" data-path="photo/' + id + '/label" value="' + esc(r.label) + '" placeholder="למשל: לוקיישן ראשון" aria-label="מה מצלמים"></td>' +
+      '<td class="nt"><button type="button" class="btn ghost small" data-act="del-photo" data-id="' + id + '" aria-label="מחיקת השורה">✕</button></td></tr>').join("") +
+    '</tbody></table><div class="tfoot"><button type="button" class="btn small" data-act="add-photo">הוספת שורה</button></div></section>';
+}
+function peopleOptions(sel){
+  const opts = ['<option value=""' + (sel ? "" : " selected") + ">מקום פנוי</option>"];
+  ordered(DATA.people).forEach(([id, p]) => opts.push('<option value="' + id + '"' + (sel === id ? " selected" : "") + ">" + esc(p.name || "ללא שם") + "</option>"));
+  opts.push('<option value="' + BREAK + '"' + (sel === BREAK ? " selected" : "") + ">— הפסקה / לא זמינה —</option>");
+  if (sel && sel !== BREAK && !(DATA.people || {})[sel]) opts.push('<option value="' + esc(sel) + '" selected>שם שנמחק</option>');
+  return opts.join("");
+}
+function vendorHTML(vid, v, a){
+  const k = KINDS[v.kind] ? v.kind : "other", slots = slotsOf(v), bk = (DATA.bookings || {})[vid] || {}, notes = (DATA.notes || {})[vid] || {};
+  const taken = slots.filter(s => bk[s.key] && bk[s.key] !== BREAK).length, brk = slots.filter(s => bk[s.key] === BREAK).length;
+  const p = "vendors/" + vid + "/";
+  const kindSel = '<label class="f kind">סוג<select id="v-' + vid + '-kind" data-path="' + p + 'kind">' + Object.entries(KINDS).map(([kk, kv]) => '<option value="' + kk + '"' + (kk === k ? " selected" : "") + ">" + kv.label + "</option>").join("") + "</select></label>";
+  let stats;
+  if (slots.length) {
+    const a0 = toMin(v.from), b0 = toMin(v.to), rem = (b0 - a0) % Number(v.dur);
+    stats = "<span><b>" + slots.length + "</b> תורים</span><span><b>" + taken + "</b> תפוסים</span><span><b>" + (slots.length - taken - brk) + "</b> פנויים</span>" +
+      (rem ? '<span class="muted">(' + rem + " דק׳ בסוף היום קצרות מתור שלם)</span>" : "");
+  } else stats = '<span class="muted">' + (toMin(v.from) != null && toMin(v.to) != null && toMin(v.to) <= toMin(v.from) ? "שעת הסיום צריכה להיות אחרי שעת ההגעה" : "כדי ליצור תורים: למלא שעת הגעה, שעת סיום ומשך תור") + "</span>";
+  let body = "";
+  if (slots.length) {
+    body = "<table><thead><tr><th>שעה</th><th>מי בתור</th><th>הערות</th></tr></thead><tbody>" + slots.map(s => {
+      const val = bk[s.key] || "", f = a.flags[vid + "|" + s.key], nObj = notes[s.key] || {}, nl = ordered(Object.fromEntries(Object.entries(nObj).map(([nid, n]) => [nid, Object.assign({ order: n.at || 0 }, n)])));
+      const rk = vid + "|" + s.key, open = openNotes.has(rk), cls = val === BREAK ? "brk" : val ? "taken" : "free";
+      const pp = val && val !== BREAK && (DATA.people || {})[val], dn = pp && ((k === "makeup" && pp.doneMakeup) || (k === "hair" && pp.doneHair));
+      let html = '<tr class="slot ' + (val && val !== BREAK ? "taken" : "") + (dn ? " done" : "") + (f ? " " + f.sev : "") + '"><td class="tm">' + rng(s.start, s.end) + "</td>" +
+        '<td><select class="book ' + cls + '" id="b-' + vid + "-" + s.key + '" data-v="' + vid + '" data-k="' + s.key + '" aria-label="' + esc("תור " + rng(s.start, s.end) + " אצל " + (v.name || "")) + '">' + peopleOptions(val) + "</select>" +
+        (dn ? '<span class="donebadge">✓ סיימה ' + KINDS[k].label + "</span>" : "") + (f ? '<div class="rmsg">' + esc(f.msg) + "</div>" : "") + "</td>" +
+        '<td class="nt"><button type="button" class="nbtn' + (nl.length ? " has" : "") + '" data-act="toggle-notes" data-rk="' + rk + '" aria-expanded="' + open + '">' + (nl.length ? "הערות (" + nl.length + ")" : "+ הערה") + "</button></td></tr>";
+      if (nl.length || open) {
+        html += '<tr class="notes slot' + (f ? " " + f.sev : "") + '"><td colspan="3">' +
+          (nl.length ? '<ul class="nlist">' + nl.map(([nid, n]) => "<li><span>" + esc(n.text) + "</span><small>" + (n.at ? new Date(n.at).toLocaleString("he-IL", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }) : "") + '</small><button type="button" data-act="del-note" data-v="' + vid + '" data-k="' + s.key + '" data-n="' + nid + '" aria-label="מחיקת ההערה">✕</button></li>').join("") + "</ul>" : "") +
+          (open ? '<div class="nadd"><input type="text" id="ni-' + vid + "-" + s.key + '" data-note="' + rk + '" placeholder="למשל: איילי מעוניינת בתור, יוצרת קשר בפרטי" aria-label="הערה חדשה"><button type="button" class="btn small primary" data-act="add-note" data-rk="' + rk + '">הוספה</button></div>' : "") +
+          "</td></tr>";
+      }
+      return html;
+    }).join("") + "</tbody></table>";
+  } else body = '<div class="empty">טבלת התורים תופיע כאן אחרי שהספקית תמלא שעות עבודה ומשך תור.</div>';
+  const orph = a.orphans[vid];
+  const orphHTML = orph ? '<div class="orph">' + orph.map(kk => "<div><span>" + esc(personName(bk[kk])) + " ב־" + keyTime(kk) + ": התור כבר לא קיים אחרי שינוי השעות. צריך לבחור תור חדש.</span>" +
+    '<button type="button" class="btn small" data-act="clear-orphan" data-v="' + vid + '" data-k="' + kk + '">ניקוי</button></div>').join("") + "</div>" : "";
+  return '<section class="tcard ' + KINDS[k].cls + '" id="v-' + vid + '"><div class="thead">' +
+    '<div class="row1"><label class="f">שם הספקית<input type="text" class="vname" id="v-' + vid + '-name" data-path="' + p + 'name" value="' + esc(v.name) + '" placeholder="השם שלך"></label>' +
+    '<label class="f">תפקיד<input type="text" id="v-' + vid + '-role" data-path="' + p + 'role" value="' + esc(v.role) + '" placeholder="איפור / שיער / תלתלים"></label>' + kindSel + "</div>" +
+    '<div class="row2"><label class="f">מגיעה בשעה<input type="time" step="300" id="v-' + vid + '-from" data-path="' + p + 'from" value="' + esc(v.from) + '"></label>' +
+    '<label class="f">מסיימת בשעה<input type="time" step="300" id="v-' + vid + '-to" data-path="' + p + 'to" value="' + esc(v.to) + '"></label>' +
+    '<label class="f">משך תור (דקות)<input type="number" min="5" max="240" step="5" inputmode="numeric" id="v-' + vid + '-dur" data-path="' + p + 'dur" value="' + esc(v.dur) + '" placeholder="למשל 45"></label></div>' +
+    '<label class="f">הערה כללית<input type="text" class="vnote" id="v-' + vid + '-note" data-path="' + p + 'note" value="' + esc(v.note) + '" placeholder="למשל: אחרי 13:00 רק תלתלים"></label>' +
+    '<div class="stats">' + stats + "</div></div>" + body + orphHTML +
+    '<div class="tfoot"><button type="button" class="btn ghost small" data-act="del-vendor" data-v="' + vid + '">מחיקת הטבלה</button></div></section>';
+}
+function peopleHTML(){
+  return '<h2>מתארגנות <small>השמות כאן מופיעים ברשימה הנפתחת</small></h2><section class="tcard"><div class="table-scroll"><table class="ptable"><thead><tr><th>שם</th><th>קרבה</th><th>מגיעה (ריק = בבוקר)</th><th>מוכנה עד</th><th>סיימה איפור</th><th>סיימה שיער</th><th><span class="sr">מחיקה</span></th></tr></thead><tbody>' +
+    ordered(DATA.people).map(([id, p]) => {
+      const pp = "people/" + id + "/";
+      return '<tr><td><input type="text" id="p-' + id + '-n" data-path="' + pp + 'name" value="' + esc(p.name) + '" aria-label="שם" placeholder="שם"></td>' +
+        '<td><input type="text" id="p-' + id + '-r" data-path="' + pp + 'role" value="' + esc(p.role) + '" aria-label="קרבה"></td>' +
+        '<td><input type="time" step="300" id="p-' + id + '-a" data-path="' + pp + 'arrive" value="' + esc(p.arrive) + '" aria-label="שעת הגעה"></td>' +
+        '<td><input type="time" step="300" id="p-' + id + '-d" data-path="' + pp + 'readyBy" value="' + esc(p.readyBy) + '" aria-label="מוכנה עד"></td>' +
+        '<td class="c"><input type="checkbox" id="p-' + id + '-dm" data-path="' + pp + 'doneMakeup"' + (p.doneMakeup ? " checked" : "") + ' aria-label="' + esc((p.name || "") + " סיימה איפור") + '"></td>' +
+        '<td class="c"><input type="checkbox" id="p-' + id + '-dh" data-path="' + pp + 'doneHair"' + (p.doneHair ? " checked" : "") + ' aria-label="' + esc((p.name || "") + " סיימה שיער") + '"></td>' +
+        '<td class="nt"><button type="button" class="btn ghost small" data-act="del-person" data-id="' + id + '" aria-label="מחיקה">✕</button></td></tr>';
+    }).join("") + '</tbody></table></div><div class="tfoot"><button type="button" class="btn small" data-act="add-person">הוספת מתארגנת</button></div></section>';
+}
+function scheduleHTML(a){
+  const cards = ordered(DATA.people).map(([id, p]) => {
+    const runs = (a.runsBy[id] || []).slice().sort((x, y) => x.start - y.start);
+    const badKeys = new Set(Object.entries(a.flags).filter(([, f]) => f.sev === "bad").map(([k]) => k));
+    const last = runs.length ? Math.max.apply(null, runs.map(r => r.end)) : null;
+    const pp = "people/" + id + "/";
+    return '<article class="pcard' + (runs.length ? "" : " none") + '"><header><h3>' + esc(p.name || "ללא שם") + "</h3><small>" + esc(p.role || "") + "</small></header>" +
+      '<label class="arr" for="pc-' + id + '-a">שעת הגעה<input type="time" step="300" id="pc-' + id + '-a" data-path="' + pp + 'arrive" value="' + esc(p.arrive) + '"></label>' +
+      '<div class="checks"><label class="ck"><input type="checkbox" id="pc-' + id + '-dm" data-path="' + pp + 'doneMakeup"' + (p.doneMakeup ? " checked" : "") + '>סיימה איפור</label>' +
+      '<label class="ck"><input type="checkbox" id="pc-' + id + '-dh" data-path="' + pp + 'doneHair"' + (p.doneHair ? " checked" : "") + '>סיימה שיער</label></div>' +
+      (runs.length ? '<ul class="plist">' + runs.map(r => '<li class="' + (r.keys.some(k => badKeys.has(r.vid + "|" + k)) ? "bad" : "") + '"><span class="t">' + rng(r.start, r.end) + "</span><span>" + esc(vendorWhat(r.v)) + "</span></li>").join("") + "</ul>" : '<p class="muted" style="font-size:14px">עדיין אין תורים</p>') +
+      (last != null ? "<footer>מוכנה ב־" + toT(last) + (p.readyBy ? " · יעד " + esc(p.readyBy) : "") + "</footer>" : "") + "</article>";
+  }).join("");
+  return '<h2>הלו״ז של כל אחת <small>מתעדכן לבד מהטבלאות</small></h2><div class="cards">' + cards + "</div>" +
+    '<button type="button" class="btn wide" style="margin-top:12px" data-act="add-person">הוספת מתארגנת</button>' +
+    '<div class="export"><div class="actions"><button type="button" class="btn primary" data-act="copy">העתקת הלו״ז כטקסט</button><a class="btn" id="wa-link" href="https://wa.me/?text=' + encodeURIComponent(exportText(a)) + '" target="_blank" rel="noopener">שליחה בוואטסאפ</a><button type="button" class="btn" data-act="share">שיתוף הקישור לדף</button></div>' +
+    '<textarea readonly id="export-text" aria-label="הלו״ז כטקסט">' + esc(exportText(a)) + "</textarea></div>";
+}
+function exportText(a){
+  const L = ["*" + ((DATA.info || {}).title || "לו״ז התארגנות") + "*", (DATA.info || {}).date || ""];
+  const ph = ordered(DATA.photo).map(([, r]) => r).filter(r => r.start);
+  if (ph.length) { L.push("", "📸 *צלם*"); ph.sort((x, y) => toMin(x.start) - toMin(y.start)).forEach(r => L.push(r.start + "–" + r.end + "  " + (r.label || ""))); }
+  ordered(DATA.people).forEach(([id, p]) => {
+    const runs = (a.runsBy[id] || []).slice().sort((x, y) => x.start - y.start); if (!runs.length) return;
+    L.push("", "*" + (p.name || "") + "*" + (p.arrive ? " (מגיעה " + p.arrive + ")" : "") + (p.doneMakeup ? " ✓איפור" : "") + (p.doneHair ? " ✓שיער" : ""));
+    runs.forEach(r => L.push(rng(r.start, r.end) + "  " + vendorWhat(r.v)));
+  });
+  const bad = a.issues.filter(i => i.sev === "bad").length;
+  if (bad) L.push("", "⚠️ יש " + plural(bad, "התנגשות אחת", "התנגשויות") + " בלו״ז");
+  return L.join("\n");
+}
+function view(){
+  const a = analyze();
+  return header() + issuesHTML(a) + photoHTML() +
+    '<h2>ספקיות <small>טבלה לכל ספקית</small></h2>' + ordered(DATA.vendors).map(([vid, v]) => vendorHTML(vid, v, a)).join("") +
+    '<button type="button" class="btn wide" data-act="add-vendor">הוספת טבלה לספקית נוספת</button>' +
+    peopleHTML() + scheduleHTML(a);
+}
+
+/* ===== רינדור עם שמירת פוקוס ===== */
+let rq = false;
+function scheduleRender(){ if (rq) return; rq = true; requestAnimationFrame(() => { rq = false; render(); }); }
+function render(){
+  if (!DATA) return;
+  const ae = document.activeElement; let keep = null;
+  if (ae && ae.id && app.contains(ae)) {
+    keep = { id: ae.id, value: ae.value, dirty: ae.dataset && ae.dataset.dirty === "1" };
+    try { keep.s = ae.selectionStart; keep.e = ae.selectionEnd; } catch (e) {}
+  }
+  app.innerHTML = view();
+  if (keep) {
+    const el = document.getElementById(keep.id);
+    if (el) {
+      if (keep.dirty) { el.value = keep.value; el.dataset.dirty = "1"; }
+      try { el.focus({ preventScroll: true }); if (keep.s != null && el.setSelectionRange) el.setSelectionRange(keep.s, keep.e); } catch (e) {}
+    }
+  }
+}
+
+/* ===== מסד נתונים (Firebase Realtime Database דרך REST) ===== */
+const url = path => DB_URL.replace(/\/+$/, "") + "/" + ROOT + (path ? "/" + path : "") + ".json";
+function setMode(m){ if (mode === m) return; mode = m; const s = app.querySelector(".status"); if (s) s.outerHTML = statusHTML(); }
+function saveLocal(){ try { localStorage.setItem(LS_KEY, JSON.stringify(DATA)); } catch (e) {} }
+function loadLocal(){ try { const d = JSON.parse(localStorage.getItem(LS_KEY) || "null"); if (d) return d; } catch (e) {} return clone(SEED); }
+async function write(path, val){
+  DATA = setIn(DATA, path.split("/"), val == null ? null : clone(val));
+  scheduleRender();
+  if (mode === "local" || mode === "denied") { saveLocal(); return; }
+  if (mode === "offline") return;
+  try {
+    const r = await fetch(url(path), val == null ? { method: "DELETE" } : { method: "PUT", body: JSON.stringify(val) });
+    if (r.status === 401 || r.status === 403) { goDenied(); return; }
+    if (!r.ok) throw new Error("HTTP " + r.status);
+  } catch (e) { goOffline(); }
+}
+function goDenied(){ setMode("denied"); stopSync(); saveLocal(); render(); }
+function goOffline(){
+  if (mode === "offline") return;
+  setMode("offline"); stopSync(); render();
+  clearTimeout(retryTimer); retryTimer = setTimeout(connect, 8000);
+}
+function stopSync(){ try { es && es.close(); } catch (e) {} es = null; clearInterval(pollTimer); pollTimer = null; }
+async function fetchAll(){
+  const r = await fetch(url(""), { cache: "no-store" });
+  if (r.status === 401 || r.status === 403) { const err = new Error("denied"); err.denied = true; throw err; }
+  if (!r.ok) throw new Error("HTTP " + r.status);
+  return r.json();
+}
+async function connect(){
+  clearTimeout(retryTimer);
+  if (!DB_URL) { DATA = loadLocal(); setMode("local"); render(); return; }
+  try {
+    let d = await fetchAll();
+    if (d == null) { d = clone(SEED); await fetch(url(""), { method: "PUT", body: JSON.stringify(d) }); }
+    DATA = d; setMode("poll"); render(); openStream();
+  } catch (e) {
+    if (e.denied) { DATA = loadLocal(); goDenied(); return; }
+    if (!DATA) DATA = clone(SEED);
+    mode = "connecting"; goOffline();
+  }
+}
+function applyRemote(path, data, isPatch){
+  const parts = String(path || "/").split("/").filter(Boolean);
+  if (isPatch) Object.keys(data || {}).forEach(k => { DATA = setIn(DATA, parts.concat(k.split("/").filter(Boolean)), data[k]); });
+  else if (!parts.length) DATA = data || clone(SEED);
+  else DATA = setIn(DATA, parts, data);
+  scheduleRender();
+}
+function openStream(){
+  startPolling();
+  if (!("EventSource" in window)) return;
+  try { es && es.close(); } catch (e) {}
+  es = new EventSource(url(""));
+  es.addEventListener("put", ev => { try { const m = JSON.parse(ev.data); applyRemote(m.path, m.data, false); setMode("live"); } catch (e) {} });
+  es.addEventListener("patch", ev => { try { const m = JSON.parse(ev.data); applyRemote(m.path, m.data, true); } catch (e) {} });
+  es.addEventListener("cancel", () => { goDenied(); });
+  es.onerror = () => { if (mode === "live") setMode("poll"); };
+}
+function startPolling(){
+  clearInterval(pollTimer);
+  pollTimer = setInterval(async () => {
+    if (mode === "live" || document.hidden) return;
+    try { const d = await fetchAll(); if (d) { DATA = d; setMode("poll"); scheduleRender(); } }
+    catch (e) { if (e.denied) goDenied(); else goOffline(); }
+  }, 8000);
+}
+
+/* ===== פעולות ===== */
+async function onBook(sel){
+  const vid = sel.dataset.v, k = sel.dataset.k, val = sel.value;
+  const cur = getIn(DATA, ["bookings", vid, k]) || "";
+  if (val === cur) return;
+  if (cur) {
+    const who = personName(cur);
+    const msg = val ? "התור הזה כבר תפוס (" + who + ").\nאם את רוצה אותו, עדיף להוסיף הערה ולתאם.\n\nלהחליף בכל זאת?" : "לפנות את התור של " + who + "?";
+    if (!confirm(msg)) { sel.value = cur; return; }
+  } else if (val && val !== BREAK && (mode === "live" || mode === "poll")) {
+    try {
+      const r = await fetch(url("bookings/" + vid + "/" + k), { cache: "no-store" });
+      if (r.ok) { const now = await r.json(); if (now && now !== val) { alert("התור נתפס הרגע (" + personName(now) + "). אפשר לבחור תור אחר או להוסיף הערה."); DATA = setIn(DATA, ["bookings", vid, k], now); render(); return; } }
+    } catch (e) {}
+  }
+  if (val && val !== BREAK) {
+    const v = DATA.vendors[vid], s = slotsOf(v).find(x => x.key === k);
+    if (s) {
+      const clash = [];
+      ordered(DATA.vendors).forEach(([ovid, ov]) => { if (ovid === vid) return; const ob = (DATA.bookings || {})[ovid] || {}; slotsOf(ov).forEach(os => { if (ob[os.key] === val && os.start < s.end && s.start < os.end) clash.push(vendorWhat(ov) + " " + rng(os.start, os.end)); }); });
+      if (clash.length && !confirm(personName(val) + " כבר בתור באותה שעה:\n" + clash.join("\n") + "\n\nלשבץ בכל זאת? (התור יסומן באדום)")) { sel.value = cur; return; }
+    }
+  }
+  write("bookings/" + vid + "/" + k, val || null);
+}
+function onField(t){
+  const path = t.dataset.path; let val = t.type === "checkbox" ? t.checked : t.value;
+  if (t.type === "number") val = val === "" ? "" : Math.max(5, Math.min(240, Math.round(Number(val)) || 0));
+  if (typeof val === "string") val = val.trim();
+  delete t.dataset.dirty;
+  const cur = getIn(DATA, path.split("/"));
+  if (cur === val) return;
+  if (/^vendors\/[^/]+\/(from|to|dur)$/.test(path)) {
+    const vid = path.split("/")[1], bk = (DATA.bookings || {})[vid] || {};
+    const nv = Object.assign({}, DATA.vendors[vid]); nv[path.split("/")[2]] = val;
+    const keys = new Set(slotsOf(nv).map(s => s.key)), lost = Object.keys(bk).filter(k => bk[k] && bk[k] !== BREAK && !keys.has(k));
+    if (lost.length && !confirm("השינוי ישנה את שעות התורים. " + plural(lost.length, "תור תפוס אחד", "תורים תפוסים") + " (" + lost.map(k => personName(bk[k]) + " " + keyTime(k)).join(", ") + ") לא יתאימו יותר ויסומנו לבחירה מחדש.\n\nלהמשיך?")) { t.value = cur == null ? "" : cur; return; }
+  }
+  write(path, val);
+}
+function addNote(rk){
+  const [vid, k] = rk.split("|"), inp = document.getElementById("ni-" + vid + "-" + k);
+  const text = inp && inp.value.trim(); if (!text) { inp && inp.focus(); return; }
+  inp.value = ""; delete inp.dataset.dirty;
+  openNotes.delete(rk);
+  write("notes/" + vid + "/" + k + "/" + uid("n"), { text: text.slice(0, 300), at: Date.now() });
+}
+app.addEventListener("change", e => {
+  const t = e.target;
+  if (t.matches("select.book")) onBook(t);
+  else if (t.dataset.path) onField(t);
+});
+app.addEventListener("input", e => { const t = e.target; if (t.dataset && (t.dataset.path || t.dataset.note)) t.dataset.dirty = "1"; });
+app.addEventListener("keydown", e => {
+  const t = e.target;
+  if (e.key === "Enter" && t.dataset && t.dataset.note) { e.preventDefault(); addNote(t.dataset.note); }
+  else if (e.key === "Enter" && t.dataset && t.dataset.path && t.tagName === "INPUT") { t.blur(); }
+});
+app.addEventListener("click", async e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  const d = b.dataset;
+  switch (d.act) {
+    case "toggle-notes": {
+      if (openNotes.has(d.rk)) openNotes.delete(d.rk); else openNotes.add(d.rk);
+      render();
+      if (openNotes.has(d.rk)) { const [vid, k] = d.rk.split("|"); const el = document.getElementById("ni-" + vid + "-" + k); if (el) el.focus(); }
+      break;
+    }
+    case "add-note": addNote(d.rk); break;
+    case "del-note": if (confirm("למחוק את ההערה?")) write("notes/" + d.v + "/" + d.k + "/" + d.n, null); break;
+    case "clear-orphan": write("bookings/" + d.v + "/" + d.k, null); break;
+    case "add-photo": write("photo/" + uid("r"), { start: "", end: "", label: "", order: nextOrder(DATA.photo) }); break;
+    case "del-photo": if (confirm("למחוק את השורה?")) write("photo/" + d.id, null); break;
+    case "add-vendor": {
+      const id = uid("v");
+      await write("vendors/" + id, { name: "", role: "", kind: "makeup", from: "", to: "", dur: "", note: "", order: nextOrder(DATA.vendors) });
+      requestAnimationFrame(() => { const el = document.getElementById("v-" + id + "-name"); if (el) { el.scrollIntoView({ block: "center" }); el.focus(); } });
+      break;
+    }
+    case "del-vendor": {
+      const v = DATA.vendors[d.v], n = Object.values((DATA.bookings || {})[d.v] || {}).filter(x => x && x !== BREAK).length;
+      if (!confirm("למחוק את הטבלה של " + (v.name || "הספקית") + "?" + (n ? "\n" + plural(n, "תור תפוס אחד יימחק", "תורים תפוסים יימחקו") + "." : ""))) return;
+      write("bookings/" + d.v, null); write("notes/" + d.v, null); write("vendors/" + d.v, null);
+      break;
+    }
+    case "add-person": {
+      const id = uid("p");
+      await write("people/" + id, { name: "", role: "", arrive: "", readyBy: "", order: nextOrder(DATA.people) });
+      requestAnimationFrame(() => { const el = document.getElementById("p-" + id + "-n"); if (el) el.focus(); });
+      break;
+    }
+    case "del-person": {
+      const used = Object.values(DATA.bookings || {}).some(m => Object.values(m || {}).includes(d.id));
+      if (used) { alert("ל" + personName(d.id) + " יש תורים. קודם לפנות אותם, ואז אפשר למחוק."); return; }
+      if (confirm("למחוק את " + personName(d.id) + " מהרשימה?")) write("people/" + d.id, null);
+      break;
+    }
+    case "copy": {
+      const ta = document.getElementById("export-text"), old = b.textContent;
+      try { await navigator.clipboard.writeText(ta.value); b.textContent = "הועתק ✓"; }
+      catch (err) { ta.focus(); ta.select(); b.textContent = "הטקסט סומן – אפשר להעתיק"; }
+      setTimeout(() => { b.textContent = old; }, 2000);
+      break;
+    }
+    case "share": {
+      const link = location.href.split("#")[0], old = b.textContent;
+      try { if (navigator.share) { await navigator.share({ title: document.title, url: link }); return; } await navigator.clipboard.writeText(link); b.textContent = "הקישור הועתק ✓"; }
+      catch (err) { b.textContent = link; }
+      setTimeout(() => { b.textContent = old; }, 2500);
+      break;
+    }
+  }
+});
+document.addEventListener("visibilitychange", () => { if (!document.hidden && mode === "offline") connect(); });
+
+connect();
+})();
+</script>
+</body>
+</html>
