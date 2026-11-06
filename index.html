@@ -106,6 +106,16 @@ label.f{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--
 .stats{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);align-items:center}
 .stats b{color:var(--ink);font-variant-numeric:tabular-nums}
 .vnote{font-size:14px}
+.assign{gap:6px}
+.assign-grid{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.assign-grid select{padding:7px 10px;font-weight:600;flex:1 1 calc(25% - 8px);min-width:120px;width:auto}
+.assign-grid .btn{flex:none}
+.assign-grid select.empty-sel{color:var(--muted);font-weight:400}
+.assign-ro{font-size:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.apill{display:inline-block;font-size:12.5px;font-weight:600;border-radius:999px;padding:1px 10px;background:#fff;border:1px solid var(--line);color:var(--ink)}
+.apill.ok{border-color:#bcd6c4;color:var(--good);background:var(--good-soft)}
+.nobook{color:var(--warn);font-weight:600}
+.allbook{color:var(--good);font-weight:600}
 table{border-collapse:collapse;width:100%}
 th{font-size:12px;font-weight:600;color:var(--muted);text-align:start;padding:10px 18px;border-bottom:1px solid var(--line);letter-spacing:.03em}
 td{padding:10px 18px;border-bottom:1px solid var(--line);vertical-align:middle}
@@ -257,6 +267,7 @@ tr.notes td{padding-top:0;background:inherit}
   .prow .tpair span{display:none}
   .prow .tpair input{width:108px}
   .wgrid.couple{grid-template-columns:1fr}
+  .assign-grid select{flex-basis:calc(50% - 8px)}
   .mylist li{grid-template-columns:1fr auto}
   .mylist .t{grid-column:1/-1}
 }
@@ -278,6 +289,7 @@ const WEDDING = new Date(2026, 10, 10);
 const BREAK = "_break";
 const BRIDE_DUR = 120;
 const DEFAULT_GAP = 10; // הפסקה בין תורים עוקבים
+const ASSIGN_SEED = { ayelet: ["shaked", "ayeli", "tamar", "hani"], noam: ["libi", "inbar", "agam"], maayan: ["idit", "shlomit"], vicky: ["shaked", "ayeli", "libi", "tamar", "idit"], chen: ["agam", "inbar", "hani", "adi"] }; // לפי ההודעה של שקד
 const PIN_HASH = "fac9b253"; // סיסמת שקד ואיל (לא נשמרת כאן כטקסט)
 const PIN_KEY = "weddingPrep-pin";
 const KINDS = {
@@ -289,7 +301,7 @@ const KINDS = {
 const GROUPS = { bride: "כלה", girl: "בנות", mom: "אמהות" };
 
 const SEED = {
-  info: { title: "יום ההתארגנות של שקד ואיל", date: "יום שלישי · 10.11.2026", leave: "17:30–18:00", reception: "19:30", photographer: "אלכס", hoursDefaulted: true },
+  info: { title: "יום ההתארגנות של שקד ואיל", date: "יום שלישי · 10.11.2026", leave: "17:30–18:00", reception: "19:30", photographer: "אלכס", hoursDefaulted: true, assignSeeded: true },
   photo: {
     r1: { start: "14:30", end: "15:00", label: "צילומי כלה", order: 1 },
     r2: { start: "15:00", end: "15:10", label: "מפגש חתן וכלה", order: 2 },
@@ -308,12 +320,12 @@ const SEED = {
     shlomit: { name: "שלומית", role: "אם החתן",   group: "mom",   arrive: "13:30", readyBy: "18:00", order: 10 }
   },
   vendors: {
-    ayelet: { name: "איילת שילוני",   kind: "makeup", from: "10:00", to: "17:00", dur: 45, gap: 10, note: "לפי שקד: שקד (איפור כלה), איילי, תמר, חני", order: 1 },
-    noam:   { name: "נועם יצחקי",    kind: "makeup", from: "10:00", to: "17:00", dur: 45, gap: 10, note: "לפי שקד: ליבי, ענבר, אגם", order: 2 },
-    maayan: { name: "מעין סעדון",    kind: "makeup", from: "10:00", to: "17:00", dur: 45, gap: 10, note: "לפי שקד: עדית ושלומית, מגיעות 13:30", order: 3 },
-    vicky:  { name: "ויקי שאולוב",   kind: "hair",   from: "10:00", to: "17:00", dur: 45, gap: 10, note: "שקד 10:00–12:00. לפי שקד גם: איילי, ליבי, תמר, עדית (עם העוזרת)", order: 4 },
-    vicky2: { name: "העוזרת של ויקי", kind: "hair",   from: "10:00", to: "17:00", dur: 45, gap: 10, note: "", order: 5 },
-    chen:   { name: "חן שקד",        kind: "curls",  from: "10:00", to: "17:00", dur: 45, gap: 10, note: "לפי שקד: אגם, ענבר, חני. עדי – בבדיקה", order: 6 }
+    ayelet: { name: "איילת שילוני",   kind: "makeup", from: "10:00", to: "17:00", dur: 45, gap: 10, assign: { a0: "shaked", a1: "ayeli", a2: "tamar", a3: "hani" }, order: 1 },
+    noam:   { name: "נועם יצחקי",    kind: "makeup", from: "10:00", to: "17:00", dur: 45, gap: 10, assign: { a0: "libi", a1: "inbar", a2: "agam" }, order: 2 },
+    maayan: { name: "מעין סעדון",    kind: "makeup", from: "10:00", to: "17:00", dur: 45, gap: 10, assign: { a0: "idit", a1: "shlomit" }, order: 3 },
+    vicky:  { name: "ויקי שאולוב",   kind: "hair",   from: "10:00", to: "17:00", dur: 45, gap: 10, assign: { a0: "shaked", a1: "ayeli", a2: "libi", a3: "tamar", a4: "idit" }, order: 4 },
+    vicky2: { name: "העוזרת של ויקי", kind: "hair",   from: "10:00", to: "17:00", dur: 45, gap: 10, assign: {}, order: 5 },
+    chen:   { name: "חן שקד",        kind: "curls",  from: "10:00", to: "17:00", dur: 45, gap: 10, assign: { a0: "agam", a1: "inbar", a2: "hani", a3: "adi" }, order: 6 }
   }
 };
 
@@ -358,6 +370,9 @@ function personName(id){ if (id === BREAK) return "הפסקה"; const p = DATA.p
 function vkind(v){ if (v.kind === "hair" && /תלתל/.test(v.role || "")) return "curls"; if (KINDS[v.kind]) return v.kind; return /תלתל/.test(v.role || "") ? "curls" : /שיער|ספר/.test(v.role || "") ? "hair" : "makeup"; }
 function vendorWhat(v){ return KINDS[vkind(v)].short + " אצל " + (v.name || "ספקית ללא שם"); }
 function stdDur(v){ const d = Number(v.dur); return d >= 5 ? d : 45; }
+function assignList(v){ return Object.entries(v.assign || {}).filter(([k]) => /^a\d+$/.test(k)).sort((x, y) => +x[0].slice(1) - +y[0].slice(1)); }
+function assignedPids(v){ const out = []; assignList(v).forEach(([, pid]) => { if (pid && (DATA.people || {})[pid] && !out.includes(pid)) out.push(pid); }); return out; }
+function hasBookingAt(vid, pid){ return Object.values((DATA.book || {})[vid] || {}).includes(pid); }
 function gapOf(v){ const g = Number(v.gap); return v.gap === "" || v.gap == null || !(g >= 0) ? DEFAULT_GAP : Math.min(60, g); }
 
 /* ===== זהות והרשאות ===== */
@@ -543,12 +558,23 @@ function peopleOptions(sel){
   if (sel && sel !== BREAK && !(DATA.people || {})[sel]) opts.push('<option value="' + esc(sel) + '" selected>שם שנמחק</option>');
   return opts.join("");
 }
+// ספקית יכולה לשבץ בטבלה שלה רק את המתארגנות המשויכות אליה, ולסמן הפסקה
+function vendorMay(vid, val){ if (!val || val === BREAK) return true; const v = (DATA.vendors || {})[vid]; return !!v && assignedPids(v).includes(val); }
+function vendorOptions(vid, sel){
+  const v = DATA.vendors[vid], list = assignedPids(v);
+  const opts = ['<option value=""' + (sel ? "" : " selected") + ">מקום פנוי</option>"];
+  list.forEach(pid => opts.push('<option value="' + pid + '"' + (sel === pid ? " selected" : "") + ">" + esc(personName(pid)) + (isBridePid(pid) ? " (תור כלה – שעתיים)" : "") + "</option>"));
+  opts.push('<option value="' + BREAK + '"' + (sel === BREAK ? " selected" : "") + ">— הפסקה / לא זמינה —</option>");
+  return opts.join("");
+}
 function slotCell(vid, v, s, k){
   const val = s.pid, me = myPid(), admin = isAdmin(), want = ((DATA.want || {})[vid] || {})[s.key] || {};
   let cell;
+  const cls = val === BREAK ? "brk" : val ? "taken" : "free", selAttrs = 'id="b-' + vid + "-" + s.key + '" data-v="' + vid + '" data-k="' + s.key + '" aria-label="' + esc("תור " + rng(s.start, s.end) + " אצל " + (v.name || "")) + '"';
   if (admin) {
-    const cls = val === BREAK ? "brk" : val ? "taken" : "free";
-    cell = '<select class="book ' + cls + '" id="b-' + vid + "-" + s.key + '" data-v="' + vid + '" data-k="' + s.key + '" aria-label="' + esc("תור " + rng(s.start, s.end) + " אצל " + (v.name || "")) + '">' + peopleOptions(val) + "</select>";
+    cell = '<select class="book ' + cls + '" ' + selAttrs + ">" + peopleOptions(val) + "</select>";
+  } else if (myVid() === vid && vendorMay(vid, val)) {
+    cell = '<select class="book ' + cls + '" ' + selAttrs + ">" + vendorOptions(vid, val) + "</select>";
   } else if (val === BREAK) {
     cell = '<span class="st brk">הפסקה</span>' + (myVid() === vid ? ' <button type="button" class="btn small" data-act="unbreak" data-v="' + vid + '" data-k="' + s.key + '">ביטול הפסקה</button>' : "");
   } else if (!val) {
@@ -579,12 +605,24 @@ function notesBlock(vid, s, open){
     (open ? '<div class="nadd"><input type="text" id="ni-' + vid + "-" + s.key + '" data-note="' + rk + '" placeholder="כתבו הערה" aria-label="הערה חדשה"><button type="button" class="btn small primary" data-act="save-note" data-rk="' + rk + '">שמירה</button><button type="button" class="btn small" data-act="close-note" data-rk="' + rk + '">סגירה</button></div>' : "");
   return { html, count: nl.length };
 }
+function assignEditHTML(vid, v){
+  const list = assignList(v), n = Math.max(4, list.length ? +list[list.length - 1][0].slice(1) + 1 : 0), cur = Object.fromEntries(list);
+  let sel = "";
+  for (let i = 0; i < n; i++) {
+    const key = "a" + i, val = cur[key] || "";
+    sel += '<select id="v-' + vid + "-as-" + i + '" data-path="vendors/' + vid + "/assign/" + key + '" aria-label="מתארגנת משויכת ' + (i + 1) + '"' + (val ? "" : ' class="empty-sel"') + '><option value="">—</option>' +
+      ordered(DATA.people).map(([pid, p]) => '<option value="' + pid + '"' + (pid === val ? " selected" : "") + ">" + esc(p.name || "ללא שם") + "</option>").join("") + "</select>";
+  }
+  return '<div class="f assign"><span>מתארגנות משויכות</span><div class="assign-grid">' + sel + '<button type="button" class="btn small" data-act="add-assign" data-v="' + vid + '" data-n="' + n + '">+ הוספה</button></div></div>';
+}
 function vendorHTML(vid, v, a){
   const k = vkind(v), slots = slotsOf(vid, v), bk = (DATA.book || {})[vid] || {}, ed = isAdmin() || myVid() === vid, me = myPid();
   const taken = slots.filter(s => s.pid && s.pid !== BREAK).length, brk = slots.filter(s => s.pid === BREAK).length;
   const p = "vendors/" + vid + "/";
   let stats;
-  if (slots.length) stats = "<span><b>" + slots.length + "</b> תורים</span><span><b>" + taken + "</b> תפוסים</span><span><b>" + (slots.length - taken - brk) + "</b> פנויים</span>";
+  const noBook = assignedPids(v).filter(pid => !hasBookingAt(vid, pid));
+  if (slots.length) stats = "<span><b>" + slots.length + "</b> תורים</span><span><b>" + taken + "</b> תפוסים</span><span><b>" + (slots.length - taken - brk) + "</b> פנויים</span>" +
+    (noBook.length ? '<span class="nobook">עוד לא קבעו תור: ' + esc(noBook.map(personName).join(", ")) + "</span>" : (assignedPids(v).length ? '<span class="allbook">כל המשויכות קבעו תור ✓</span>' : ""));
   else stats = '<span class="muted">' + (toMin(v.from) != null && toMin(v.to) != null && toMin(v.to) <= toMin(v.from) ? "שעת הסיום צריכה להיות אחרי שעת ההגעה" : "התורים יופיעו אחרי שהספקית תמלא שעת הגעה, שעת סיום ומשך תור") + "</span>";
   let head;
   if (ed) {
@@ -594,11 +632,11 @@ function vendorHTML(vid, v, a){
       '<label class="f">מסיימת בשעה<input type="time" step="300" id="v-' + vid + '-to" data-path="' + p + 'to" value="' + esc(v.to) + '"></label>' +
       '<label class="f durf">משך תור סטנדרטי (דקות)<input type="number" min="5" max="240" step="5" inputmode="numeric" id="v-' + vid + '-dur" data-path="' + p + 'dur" value="' + esc(v.dur) + '" placeholder="45"><span class="hint">תור כלה = שעתיים</span></label>' +
       '<label class="f">הפסקה בין תורים (דקות)<input type="number" min="0" max="60" step="5" inputmode="numeric" id="v-' + vid + '-gap" data-path="' + p + 'gap" value="' + esc(gapOf(v)) + '"></label></div>' +
-      '<label class="f">הערה כללית<input type="text" class="vnote" id="v-' + vid + '-note" data-path="' + p + 'note" value="' + esc(v.note) + '" placeholder="למשל: אחרי 13:00 רק תלתלים"></label>';
+      assignEditHTML(vid, v);
   } else {
     head = '<div class="ro-head"><h3>' + esc(v.name || "ספקית") + '</h3><span class="ktag">' + KINDS[k].label + "</span></div>" +
       '<p class="ro-meta">' + (v.from && v.to ? "<span>\u2066" + esc(v.from) + "–" + esc(v.to) + "\u2069</span> · " : "") + "תור סטנדרטי " + stdDur(v) + " דק׳ · " + gapOf(v) + " דק׳ הפסקה בין תורים · תור כלה שעתיים</p>" +
-      (v.note ? '<p class="vnote muted">' + esc(v.note) + "</p>" : "");
+      (assignedPids(v).length ? '<p class="assign-ro"><span class="muted">משויכות:</span> ' + assignedPids(v).map(pid => '<span class="apill' + (hasBookingAt(vid, pid) ? " ok" : "") + '">' + esc(personName(pid)) + "</span>").join("") + "</p>" : "");
   }
   let body = "";
   if (slots.length) {
@@ -649,7 +687,7 @@ function peopleAdminHTML(){
 function fullHTML(a){
   return header() +
     '<div class="howto"><div><b>בנות ואמהות:</b> לוחצות "לתפוס" ליד תור פנוי. תור תפוס? לחיצה על השם מסמנת שאתן מעוניינות, ולחיצה נוספת מבטלת.</div>' +
-    "<div><b>ספקיות:</b> ממלאות שעת הגעה, שעת סיום ומשך תור סטנדרטי. בין תורים יש 10 דק׳ הפסקה, ותור כלה = שעתיים; התורים שאחריו זזים לבד.</div>" +
+    "<div><b>ספקיות:</b> משבצות בטבלה שלכן את המתארגנות המשויכות אליכן (או מסמנות הפסקה), וממלאות שעת הגעה, שעת סיום ומשך תור סטנדרטי. בין תורים יש 10 דק׳ הפסקה, ותור כלה = שעתיים; התורים שאחריו זזים לבד.</div>" +
     "<div><b>שימו לב:</b> הדף מסמן באדום תור שחופף לתור אחר שלך (למשל איפור ושיער באותה שעה). רק שקד ואיל יכולים לשנות תורים של אחרות.</div></div>" +
     issuesHTML(a.issues) + photoHTML() +
     "<h2>איפור ושיער <small>טבלה לכל ספקית</small></h2>" + ordered(DATA.vendors).map(([vid, v]) => vendorHTML(vid, v, a)).join("") +
@@ -668,6 +706,13 @@ function myRunsHTML(pid, a){
       ((isAdmin() || myPid() === pid) ? '<button type="button" class="btn small" data-act="release-run" data-v="' + r.vid + '" data-ks="' + r.keys.join(",") + '">ביטול</button>' : "<span></span>") + "</li>";
   }).join("") + "</ul>";
 }
+function myVendorsHTML(pid){
+  const vs = ordered(DATA.vendors).filter(([, v]) => assignedPids(v).includes(pid));
+  if (!vs.length) return "";
+  return '<h2>הספקיות שלי</h2><ul class="mylist">' + vs.map(([vid, v]) => { const k = vkind(v), ok = hasBookingAt(vid, pid);
+    return '<li class="' + KINDS[k].cls + '"><span class="w" style="grid-column:1/3"><b>' + esc(v.name || "ספקית") + "</b><small>" + KINDS[k].label + "</small></span>" +
+      '<span class="' + (ok ? "allbook" : "nobook") + '">' + (ok ? "יש לך תור ✓" : "עוד אין לך תור") + "</span></li>"; }).join("") + "</ul>";
+}
 function mineHTML(a){
   const m = meParse(), top = '<header class="top mine-hero"><p class="eyebrow">' + esc(info().date || "") + "</p><h1>הלו״ז של " + esc(whoName(ME)) + "</h1>" + statusHTML() + "</header>";
   if (m.t === "p") {
@@ -680,6 +725,7 @@ function mineHTML(a){
       '<div class="panel" style="margin-top:16px"><div class="row"><label class="arr ck" for="me-arr">שעת הגעה <input type="time" step="300" id="me-arr" data-path="' + pp + 'arrive" value="' + esc(p.arrive) + '" style="width:120px"></label>' +
       '<span class="muted">' + (p.readyBy ? "צריכה להיות מוכנה עד <b>" + esc(p.readyBy) + "</b>" : "") + (last != null ? " · לפי התורים מוכנה ב־<b>" + toT(last) + "</b>" : "") + "</span></div>" +
       '<div class="checks"><label class="ck"><input type="checkbox" id="me-dm" data-path="' + pp + 'doneMakeup"' + (p.doneMakeup ? " checked" : "") + '>סיימתי איפור</label><label class="ck"><input type="checkbox" id="me-dh" data-path="' + pp + 'doneHair"' + (p.doneHair ? " checked" : "") + ">סיימתי שיער</label></div></div>" +
+      myVendorsHTML(m.id) +
       "<h2>התורים שלי</h2>" + myRunsHTML(m.id, a) + (mine.length ? issuesHTML(mine) : "") +
       (wants.length ? '<h2>תורים שסימנתי שאני מעוניינת בהם</h2><ul class="mylist">' + wants.map(w => { const v = DATA.vendors[w.vid], k = vkind(v), holder = ((DATA.book || {})[w.vid] || {})[w.k];
           return '<li class="' + KINDS[k].cls + '"><span class="t">' + (w.s ? rng(w.s.start, w.s.end) : "—") + '</span><span class="w"><b>' + esc(vendorWhat(v)) + "</b><small>" + (holder && holder !== BREAK ? "התור אצל " + esc(personName(holder)) : "התור התפנה – אפשר לתפוס אותו") + '</small></span><button type="button" class="btn small" data-act="unwant" data-v="' + w.vid + '" data-k="' + w.k + '" data-p="' + m.id + '">הסרה</button></li>'; }).join("") + "</ul>" : "") +
@@ -745,6 +791,11 @@ async function migrate(d){
   const fixes = [];
   if (!d.info) d.info = {};
   if (!d.info.photographer) fixes.push(["info/photographer", "אלכס"]);
+  if (!d.info.assignSeeded) {
+    fixes.push(["info/assignSeeded", true]);
+    Object.entries(ASSIGN_SEED).forEach(([vid, list]) => { const v = (d.vendors || {})[vid]; if (v && !v.assign) { const o = {}; list.forEach((pid, i) => { o["a" + i] = pid; }); fixes.push(["vendors/" + vid + "/assign", o]); } });
+    Object.entries(d.vendors || {}).forEach(([vid, v]) => { if (v && v.note !== undefined) fixes.push(["vendors/" + vid + "/note", null]); });
+  }
   if (!d.info.hoursDefaulted) { fixes.push(["info/hoursDefaulted", true]); Object.entries(d.vendors || {}).forEach(([id, v]) => { if (!v) return; if (!v.from) fixes.push(["vendors/" + id + "/from", "10:00"]); if (!v.to) fixes.push(["vendors/" + id + "/to", "17:00"]); }); }
   Object.entries(d.people || {}).forEach(([id, p]) => { if (p && !GROUPS[p.group]) fixes.push(["people/" + id + "/group", pgroupRaw(id, p)]); });
   Object.entries(d.vendors || {}).forEach(([id, v]) => { if (!v) return; if (v.role !== undefined || !KINDS[v.kind]) { fixes.push(["vendors/" + id + "/kind", vkind(v)]); fixes.push(["vendors/" + id + "/role", null]); } if (v.dur === "" || v.dur == null) fixes.push(["vendors/" + id + "/dur", 45]); });
@@ -809,6 +860,7 @@ async function freshSlot(vid, key){
 async function onAdminBook(sel){
   const vid = sel.dataset.v, k = sel.dataset.k, val = sel.value, cur = getIn(DATA, ["book", vid, k]) || "";
   if (val === cur) return;
+  if (!isAdmin() && !(myVid() === vid && vendorMay(vid, cur) && vendorMay(vid, val))) { sel.value = cur; render(); return; }
   if (cur && !confirm(val ? "התור תפוס על ידי " + personName(cur) + ". להחליף ל" + (val === BREAK ? "הפסקה" : personName(val)) + "?" : "לפנות את התור של " + personName(cur) + "?")) { sel.value = cur; return; }
   if (val && val !== BREAK) {
     const bk = Object.assign({}, (DATA.book || {})[vid] || {}); bk[k] = val;
@@ -858,7 +910,7 @@ function setScreen(s){ ui.screen = s; try { sessionStorage.setItem("weddingPrep-
 
 app.addEventListener("change", e => {
   const t = e.target;
-  if (t.matches("select.book")) { if (isAdmin()) onAdminBook(t); else render(); }
+  if (t.matches("select.book")) { if (isAdmin() || myVid() === t.dataset.v) onAdminBook(t); else render(); }
   else if (t.dataset.path) onField(t);
 });
 app.addEventListener("input", e => { const t = e.target; if (t.dataset && (t.dataset.path || t.dataset.note)) t.dataset.dirty = "1"; });
@@ -901,6 +953,7 @@ app.addEventListener("click", async e => {
       if (ui.openNotes.has(d.rk)) { const [vid, k] = d.rk.split("|"); const el = document.getElementById("ni-" + vid + "-" + k); if (el) el.focus(); }
       break;
     }
+    case "add-assign": if (isAdmin() || myVid() === d.v) { write("vendors/" + d.v + "/assign/a" + d.n, ""); requestAnimationFrame(() => { const el = document.getElementById("v-" + d.v + "-as-" + d.n); if (el) el.focus(); }); } break;
     case "save-note": saveNote(d.rk); break;
     case "close-note": ui.openNotes.delete(d.rk); render(); break;
     case "del-note": { const n = getIn(DATA, ["notes2", d.v, d.k, d.n]); if (n && (isAdmin() || n.by === ME) && confirm("למחוק את ההערה?")) write("notes2/" + d.v + "/" + d.k + "/" + d.n, null); break; }
@@ -910,7 +963,7 @@ app.addEventListener("click", async e => {
     case "add-vendor": {
       if (!isAdmin()) return;
       const id = uid("v");
-      await write("vendors/" + id, { name: "", kind: "makeup", from: "10:00", to: "17:00", dur: 45, gap: 10, note: "", order: nextOrder(DATA.vendors) });
+      await write("vendors/" + id, { name: "", kind: "makeup", from: "10:00", to: "17:00", dur: 45, gap: 10, order: nextOrder(DATA.vendors) });
       requestAnimationFrame(() => { const el = document.getElementById("v-" + id + "-name"); if (el) { el.scrollIntoView({ block: "center" }); el.focus(); } });
       break;
     }
