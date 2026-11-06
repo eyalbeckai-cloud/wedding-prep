@@ -10,9 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Bellefair&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* layout: one column of booking tables, photographer first; header carries the day's fixed times and live status */
+  /* layout: entry cards → choice → "mine" or full booking tables; one centered column */
   --bg:#f4f3f6;--surface:#ffffff;--ink:#1f1c27;--muted:#6c6777;--line:#e2dfe7;--accent:#7a2350;--accent-soft:#f4e7ee;
-  --mk:#b03f68;--mk-soft:#f8e4eb;--hr:#2b6d78;--hr-soft:#dcecee;--ot:#5a5f73;--ot-soft:#e8e9ef;--ph:#4a5296;--ph-soft:#e5e6f4;
+  --mk:#b03f68;--mk-soft:#f8e4eb;--hr:#2b6d78;--hr-soft:#dcecee;--cu:#6b4fa0;--cu-soft:#ece6f6;--ph:#2f7fa8;--ph-soft:#e0f1fa;
   --bad:#c0262d;--bad-soft:#fde8e8;--warn:#a05d00;--warn-soft:#fff1db;--good:#2b7a4b;--good-soft:#e1f2e7;
   --display:"Bellefair","Frank Ruhl Libre",Georgia,serif;
   --body:"IBM Plex Sans Hebrew","Assistant","Segoe UI",Arial,sans-serif;
@@ -22,7 +22,7 @@
 @media (prefers-color-scheme:dark){
   :root{
     --bg:#141218;--surface:#1d1a23;--ink:#ece8f2;--muted:#a39dae;--line:#322e3a;--accent:#e58bb4;--accent-soft:#3a2230;
-    --mk:#ea8dae;--mk-soft:#3d2230;--hr:#73c3cf;--hr-soft:#183539;--ot:#b4b8cc;--ot-soft:#2a2b35;--ph:#a2a9ef;--ph-soft:#252846;
+    --mk:#ea8dae;--mk-soft:#3d2230;--hr:#73c3cf;--hr-soft:#183539;--cu:#b9a3e6;--cu-soft:#2c2440;--ph:#8fd0f0;--ph-soft:#17303d;
     --bad:#ff7d82;--bad-soft:#3d1b1e;--warn:#f2ad52;--warn-soft:#3a2a14;--good:#72d49d;--good-soft:#17352a;
     color-scheme:dark;
   }
@@ -51,6 +51,14 @@ p{margin:0}
 .status.warn{background:var(--warn-soft);border-color:transparent;color:var(--warn)}.status.warn i{background:var(--warn)}
 .howto{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;display:grid;gap:4px;font-size:14px;margin-top:16px}
 .howto b{color:var(--accent)}
+/* nav */
+.nav{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.nav .hi{font-size:14px;color:var(--muted)}
+.nav .hi b{color:var(--ink)}
+.tag-admin{display:inline-block;font-size:11.5px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent);margin-inline-start:6px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+.seg button{appearance:none;border:0;background:none;font:inherit;font-size:14px;padding:6px 14px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--surface);font-weight:600}
 /* issues */
 .issues{border-radius:var(--r);padding:12px 16px;margin-top:14px;font-size:14px}
 .issues.ok{background:var(--good-soft);color:var(--good)}
@@ -75,35 +83,62 @@ input,select,textarea{font:inherit;font-size:15px;color:var(--ink);background:va
 input[type=time],input[type=number]{font-variant-numeric:tabular-nums}
 input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
 input::placeholder{color:var(--muted);opacity:.8}
+input[type=checkbox]{width:18px;height:18px;padding:0;margin:0;flex:none;accent-color:var(--good);cursor:pointer}
+input[type=checkbox]:disabled{cursor:default}
 label.f{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);font-weight:500;min-width:0}
+.hint{font-size:12px;color:var(--muted)}
 /* table cards */
-.tcard{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:16px;--k:var(--ot);--ks:var(--ot-soft)}
+.tcard{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:16px;--k:var(--hr);--ks:var(--hr-soft)}
 .tcard.mk{--k:var(--mk);--ks:var(--mk-soft)}
-.tcard.hr{--k:var(--hr);--ks:var(--hr-soft)}
+.tcard.hr,.tcard.hc{--k:var(--hr);--ks:var(--hr-soft)}
+.tcard.cu{--k:var(--cu);--ks:var(--cu-soft)}
 .tcard.ph{--k:var(--ph);--ks:var(--ph-soft)}
 .thead{background:var(--ks);border-top:4px solid var(--k);padding:12px 14px;display:grid;gap:10px}
-.thead .row1{display:grid;grid-template-columns:1.4fr 1fr auto;gap:8px;align-items:end}
-.thead .row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.thead .row1{display:grid;grid-template-columns:1.6fr 1fr;gap:8px;align-items:end}
+.thead .row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:start}
 .thead input,.thead select{background:var(--surface)}
 .vname{font-weight:600;font-size:17px}
+.ro-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ro-head h3{font-size:18px}
+.ktag{font-size:12px;font-weight:600;border-radius:999px;padding:2px 10px;background:var(--surface);color:var(--k);border:1px solid var(--k)}
+.ro-meta{font-size:14px;color:var(--ink)}
+.ro-meta span{font-variant-numeric:tabular-nums}
 .stats{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);align-items:center}
 .stats b{color:var(--ink);font-variant-numeric:tabular-nums}
 .vnote{font-size:14px}
 table{border-collapse:collapse;width:100%}
 th{font-size:12px;font-weight:600;color:var(--muted);text-align:start;padding:8px 14px;border-bottom:1px solid var(--line)}
-td{padding:7px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+td{padding:8px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
 tbody tr:last-child td{border-bottom:0}
 td.tm{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;width:1%;direction:ltr;text-align:right}
 td.nt{width:1%;white-space:nowrap}
 tr.slot.taken td.tm{color:var(--k)}
+tr.slot.done td.tm{color:var(--good)}
 tr.slot.bad{background:var(--bad-soft)}
 tr.slot.warn{background:var(--warn-soft)}
+tr.slot.mine-row{box-shadow:inset -4px 0 0 var(--k)}
 select.book{font-weight:500}
 select.book.free{color:var(--good)}
 select.book.brk{color:var(--muted);font-style:italic}
+.st{font-weight:600}
+.st.free{color:var(--good);font-weight:500}
+.st.brk{color:var(--muted);font-style:italic;font-weight:500}
+.take{appearance:none;font:inherit;font-size:14px;font-weight:600;color:var(--good);background:var(--good-soft);border:1px dashed var(--good);border-radius:8px;padding:6px 12px;cursor:pointer;width:100%;text-align:start}
+.take:hover{border-style:solid}
+.tname{appearance:none;font:inherit;font-size:14px;font-weight:600;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;width:100%;text-align:start;display:grid;gap:0;line-height:1.35}
+.tname small{font-weight:500;color:var(--muted);font-size:12px}
+.tname:hover{border-color:var(--accent)}
+.tname.me{background:var(--ks);border-color:var(--k)}
+.wants{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.want{appearance:none;font:inherit;font-size:12.5px;font-weight:600;border-radius:999px;padding:2px 10px;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);cursor:default}
+button.want{cursor:pointer}
+button.want:hover{background:var(--surface)}
+.btag{display:inline-block;font-size:12px;font-weight:600;color:var(--k);margin-top:4px}
+.donebadge{display:inline-block;margin-top:4px;font-size:12.5px;font-weight:600;color:var(--good)}
 .rmsg{font-size:12.5px;margin-top:4px;font-weight:500}
 tr.bad .rmsg{color:var(--bad)}
 tr.warn .rmsg{color:var(--warn)}
+.mini-act{margin-top:6px}
 .nbtn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:inherit;font-size:13px;border-radius:999px;padding:3px 10px;cursor:pointer;white-space:nowrap}
 .nbtn.has{color:var(--accent);border-color:var(--accent)}
 tr.notes td{padding-top:0;background:inherit}
@@ -113,8 +148,8 @@ tr.notes td{padding-top:0;background:inherit}
 .nlist small{color:var(--muted);font-size:11.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .nlist button{appearance:none;border:0;background:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px}
 .nlist button:hover{color:var(--bad)}
-.nadd{display:flex;gap:8px;margin-top:6px}
-.nadd input{flex:1}
+.nadd{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+.nadd input{flex:1 1 200px}
 .empty{padding:16px 14px;color:var(--muted);font-size:14px}
 .orph{padding:10px 14px;border-top:1px solid var(--line);font-size:13px;color:var(--warn);display:grid;gap:6px}
 .orph div{display:flex;gap:8px;align-items:center;justify-content:space-between}
@@ -125,47 +160,94 @@ tr.notes td{padding-top:0;background:inherit}
 .prow td input:focus{background:var(--bg)}
 .prow .tpair{display:flex;align-items:center;gap:4px;direction:ltr;justify-content:flex-end}
 .prow .tpair input{width:120px}
-/* people */
+/* people admin */
 .ptable td{padding:6px 8px}
 .ptable th{padding:8px}
 .ptable td:first-child,.ptable th:first-child{padding-inline-start:14px}
-.ptable input{padding:5px 8px}
+.ptable input,.ptable select{padding:5px 8px}
 .ptable input[type=time]{width:120px}
 .table-scroll{overflow-x:auto;position:relative}
-.ptable{min-width:780px}
-/* schedule cards */
+.ptable{min-width:760px}
+/* person cards */
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:12px}
 .pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;gap:8px;align-content:start}
 .pcard header{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .pcard h3{font-size:16px;font-weight:600}
 .pcard header small{color:var(--muted);font-size:12.5px}
+.pcard .arr{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.pcard .arr input{width:120px;padding:4px 8px}
+.checks{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.ck{display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;white-space:nowrap}
 .plist{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:14px}
 .plist li{display:grid;grid-template-columns:96px 1fr;gap:8px}
 .plist .t{font-variant-numeric:tabular-nums;font-weight:600;direction:ltr;text-align:right}
 .plist li.bad{color:var(--bad)}
 .pcard footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:6px}
 .pcard.none{opacity:.75}
-.export{margin-top:16px;display:grid;gap:8px}
-.export textarea{min-height:220px;font-size:13.5px;line-height:1.55}
-.actions{display:flex;flex-wrap:wrap;gap:8px}
-input[type=checkbox]{width:18px;height:18px;padding:0;margin:0;flex:none;accent-color:var(--good);cursor:pointer}
-.ck{display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;white-space:nowrap}
-.checks{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
-.pcard .arr{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
-.pcard .arr input{width:120px;padding:4px 8px}
-.donebadge{display:inline-block;margin-top:4px;font-size:12.5px;font-weight:600;color:var(--good)}
-tr.slot.done td.tm{color:var(--good)}
-td.c{text-align:center}
+/* mine */
+.mine-hero{display:grid;gap:6px;margin-bottom:6px}
+.mylist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.mylist li{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border-inline-start:4px solid var(--k);--k:var(--hr)}
+.mylist li.mk{--k:var(--mk)}.mylist li.cu{--k:var(--cu)}.mylist li.ph{--k:var(--ph)}
+.mylist li.bad{background:var(--bad-soft)}
+.mylist .t{font-variant-numeric:tabular-nums;font-weight:700;font-size:16px;direction:ltr;white-space:nowrap}
+.mylist .w b{display:block;font-weight:600}
+.mylist .w small{display:block;color:var(--muted);font-size:13px}
+.mylist .w .rmsg{display:block;color:var(--bad)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:grid;gap:10px}
+.panel .row{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center}
+/* home */
+.home{display:grid;gap:22px;padding-top:6px}
+.home .hero{text-align:center;display:grid;gap:6px;justify-items:center}
+.home .hero h1{font-size:clamp(34px,8vw,52px)}
+.lead{font-size:16px;color:var(--muted)}
+.gh{font-family:var(--body);font-size:13px;font-weight:600;color:var(--muted);margin:0 0 8px;display:block}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.wgrid.couple{grid-template-columns:1.5fr 1fr}
+.who{position:relative;overflow:hidden;border:0;border-radius:16px;min-height:104px;padding:14px 16px;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;text-align:start;cursor:pointer;font:inherit;color:#fff;box-shadow:0 1px 2px rgb(0 0 0 / .14),0 10px 24px -14px rgb(0 0 0 / .45);transition:transform .15s ease,box-shadow .15s ease;isolation:isolate}
+.who:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgb(0 0 0 / .16),0 16px 30px -14px rgb(0 0 0 / .5)}
+.who b{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.05;position:relative;z-index:2}
+.who small{font-size:13px;opacity:.88;position:relative;z-index:2}
+.who::after{content:"";position:absolute;inset:-20%;background:linear-gradient(115deg,transparent 38%,rgb(255 255 255 / .22) 48%,transparent 58%);z-index:1;pointer-events:none}
+.who.sel{outline:3px solid var(--accent);outline-offset:3px}
+.who.pearl{min-height:150px;color:#3b2f20;background:radial-gradient(130% 100% at 80% 0%,#ffffff 0%,#fcf9f2 30%,#f1e9dc 65%,#e4d8c4 100%);box-shadow:0 1px 2px rgb(120 96 60 / .25),0 14px 30px -14px rgb(120 96 60 / .55),inset 0 0 0 1px #e2d3b5}
+.who.pearl::before{content:"";position:absolute;inset:7px;border:1px solid rgb(176 141 87 / .6);border-radius:11px;pointer-events:none;z-index:2}
+.who.pearl::after{background:linear-gradient(115deg,transparent 30%,rgb(255 255 255 / .95) 42%,rgb(255 214 236 / .45) 47%,rgb(204 230 255 / .45) 52%,transparent 62%);animation:sheen 5s ease-in-out infinite}
+.who.pearl b{font-size:36px}
+.who.pearl small{color:#9a7a3d;font-weight:600;opacity:1}
+@keyframes sheen{0%{transform:translateX(-60%)}55%,100%{transform:translateX(60%)}}
+.orn{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:72%;max-width:250px;height:auto;z-index:2;pointer-events:none}
+.who.tux{min-height:150px;background:linear-gradient(150deg,#2a2a31 0%,#16161a 55%,#0a0a0c 100%)}
+.who.tux::before{content:"";position:absolute;inset:0;background:linear-gradient(118deg,transparent 46%,rgb(255 255 255 / .09) 50%,transparent 56%),linear-gradient(62deg,transparent 46%,rgb(255 255 255 / .06) 50%,transparent 56%);z-index:1}
+.bow{position:absolute;top:16px;left:16px;width:46px;z-index:2}
+.who.gown{background:linear-gradient(155deg,#4f0a1b 0%,#86132f 40%,#a8203d 52%,#7a1029 66%,#45081a 100%)}
+.who.royal{background:linear-gradient(155deg,#0e1f66 0%,#1d3db0 44%,#2b55d6 54%,#18318f 70%,#0d1c5c 100%)}
+.who.emerald{background:linear-gradient(155deg,#0a3a29 0%,#166447 44%,#1f8a5f 54%,#135339 70%,#0a3626 100%)}
+.who.sky{color:#0b3550;background:linear-gradient(155deg,#9fd6f3 0%,#c6eafc 44%,#e4f6ff 54%,#b5e1f8 70%,#93cfef 100%)}
+.who.sky::after{background:linear-gradient(115deg,transparent 38%,rgb(255 255 255 / .55) 48%,transparent 58%)}
+/* choose */
+.choose{display:grid;gap:16px;justify-items:center;text-align:center;padding-top:28px}
+.choose .opts{display:grid;gap:12px;width:min(420px,100%);margin-top:10px}
+.bigbtn{appearance:none;font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:16px;padding:20px 22px;cursor:pointer;text-align:start;display:grid;gap:2px;box-shadow:0 8px 22px -16px rgb(0 0 0 / .4)}
+.bigbtn b{font-family:var(--display);font-weight:400;font-size:28px;line-height:1.1}
+.bigbtn small{color:var(--muted);font-size:14px}
+.bigbtn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.bigbtn.primary small{color:inherit;opacity:.85}
+.bigbtn:hover{transform:translateY(-1px)}
+.linkbtn{appearance:none;border:0;background:none;font:inherit;color:var(--muted);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:14px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (max-width:560px){
-  .thead .row1{grid-template-columns:1fr 1fr}
-  .thead .row1 .kind{grid-column:1/-1}
+  .thead .row2{grid-template-columns:1fr 1fr}
+  .thead .row2 .durf{grid-column:1/-1}
   td{padding:7px 10px}
   th{padding:8px 10px}
   .plist li{grid-template-columns:90px 1fr}
   .prow .tpair{flex-direction:column;align-items:stretch;gap:2px}
   .prow .tpair span{display:none}
   .prow .tpair input{width:108px}
+  .wgrid.couple{grid-template-columns:1fr}
+  .mylist li{grid-template-columns:1fr auto}
+  .mylist .t{grid-column:1/-1}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -180,36 +262,44 @@ td.c{text-align:center}
 const DB_URL = "https://ebmathgame-default-rtdb.europe-west1.firebasedatabase.app";
 const ROOT = "weddingPrep/v1";
 const LS_KEY = "weddingPrep-local-v1";
+const ME_KEY = "weddingPrep-me";
 const WEDDING = new Date(2026, 10, 10);
 const BREAK = "_break";
-const KINDS = { makeup: { label: "איפור", cls: "mk" }, hair: { label: "שיער", cls: "hr" }, other: { label: "אחר", cls: "ot" } };
+const BRIDE_DUR = 120;
+const KINDS = {
+  makeup:    { label: "איפור",          short: "איפור",        cls: "mk", done: "doneMakeup" },
+  hair:      { label: "שיער",           short: "שיער",         cls: "hr", done: "doneHair" },
+  curls:     { label: "תלתלים בלבד",    short: "תלתלים",       cls: "cu", done: "doneHair" },
+  hairCurls: { label: "שיער + תלתלים",  short: "שיער ותלתלים", cls: "hc", done: "doneHair" }
+};
+const GROUPS = { bride: "כלה", girl: "בנות", mom: "אמהות" };
 
 const SEED = {
-  info: { title: "יום ההתארגנות של שקד ואיל", date: "יום שלישי · 10.11.2026", leave: "17:30–18:00", reception: "19:30" },
+  info: { title: "יום ההתארגנות של שקד ואיל", date: "יום שלישי · 10.11.2026", leave: "17:30–18:00", reception: "19:30", photographer: "אלכס" },
   photo: {
     r1: { start: "14:30", end: "15:00", label: "צילומי כלה", order: 1 },
     r2: { start: "15:00", end: "15:10", label: "מפגש חתן וכלה", order: 2 },
     r3: { start: "15:10", end: "17:00", label: "צילומי זוגיות בחוץ", order: 3 }
   },
   people: {
-    shaked:  { name: "שקד",   role: "כלה",       arrive: "",      readyBy: "14:15", order: 1 },
-    ayeli:   { name: "איילי",  role: "אחות הכלה", arrive: "",      readyBy: "18:00", order: 2 },
-    agam:    { name: "אגם",   role: "אחות הכלה", arrive: "",      readyBy: "18:00", order: 3 },
-    inbar:   { name: "ענבר",  role: "אחות הכלה", arrive: "",      readyBy: "18:00", order: 4 },
-    libi:    { name: "ליבי",  role: "אחות הכלה", arrive: "",      readyBy: "18:00", order: 5 },
-    tamar:   { name: "תמר",   role: "אחות הכלה", arrive: "",      readyBy: "18:00", order: 6 },
-    hani:    { name: "חני",   role: "אם הכלה",   arrive: "13:30", readyBy: "18:00", order: 7 },
-    idit:    { name: "עדית",  role: "אמא",       arrive: "13:30", readyBy: "18:00", order: 8 },
-    shlomit: { name: "שלומית", role: "אם החתן",  arrive: "13:30", readyBy: "18:00", order: 9 },
-    adi:     { name: "עדי",   role: "אחות החתן", arrive: "14:00", readyBy: "18:00", order: 10 }
+    shaked:  { name: "שקד",    role: "כלה",       group: "bride", arrive: "",      readyBy: "14:15", order: 1 },
+    ayeli:   { name: "איילי",   role: "אחות הכלה", group: "girl",  arrive: "",      readyBy: "18:00", order: 2 },
+    agam:    { name: "אגם",    role: "אחות הכלה", group: "girl",  arrive: "",      readyBy: "18:00", order: 3 },
+    inbar:   { name: "ענבר",   role: "אחות הכלה", group: "girl",  arrive: "",      readyBy: "18:00", order: 4 },
+    libi:    { name: "ליבי",   role: "אחות הכלה", group: "girl",  arrive: "",      readyBy: "18:00", order: 5 },
+    tamar:   { name: "תמר",    role: "אחות הכלה", group: "girl",  arrive: "",      readyBy: "18:00", order: 6 },
+    adi:     { name: "עדי",    role: "אחות החתן", group: "girl",  arrive: "14:00", readyBy: "18:00", order: 7 },
+    hani:    { name: "חני",    role: "אם הכלה",   group: "mom",   arrive: "13:30", readyBy: "18:00", order: 8 },
+    idit:    { name: "עדית",   role: "אמא",       group: "mom",   arrive: "13:30", readyBy: "18:00", order: 9 },
+    shlomit: { name: "שלומית", role: "אם החתן",   group: "mom",   arrive: "13:30", readyBy: "18:00", order: 10 }
   },
   vendors: {
-    ayelet: { name: "איילת שילוני", role: "איפור", kind: "makeup", from: "10:00", to: "", dur: "", note: "לפי שקד: שקד (איפור כלה), איילי, תמר, חני", order: 1 },
-    noam:   { name: "נועם יצחקי",  role: "איפור", kind: "makeup", from: "", to: "", dur: "", note: "לפי שקד: ליבי, ענבר, אגם", order: 2 },
-    maayan: { name: "מעין סעדון",  role: "איפור", kind: "makeup", from: "", to: "", dur: "", note: "לפי שקד: עדית ושלומית, מגיעות 13:30", order: 3 },
-    vicky:  { name: "ויקי שאולוב", role: "עיצוב שיער", kind: "hair", from: "", to: "", dur: "", note: "שקד 10:00–12:00. לפי שקד גם: איילי, ליבי, תמר, עדית (עם העוזרת)", order: 4 },
-    vicky2: { name: "העוזרת של ויקי", role: "עיצוב שיער", kind: "hair", from: "", to: "", dur: "", note: "", order: 5 },
-    chen:   { name: "חן שקד", role: "תלתלים", kind: "hair", from: "", to: "", dur: "", note: "לפי שקד: אגם, ענבר, חני. עדי – בבדיקה", order: 6 }
+    ayelet: { name: "איילת שילוני",   kind: "makeup", from: "10:00", to: "", dur: 45, note: "לפי שקד: שקד (איפור כלה), איילי, תמר, חני", order: 1 },
+    noam:   { name: "נועם יצחקי",    kind: "makeup", from: "", to: "", dur: 45, note: "לפי שקד: ליבי, ענבר, אגם", order: 2 },
+    maayan: { name: "מעין סעדון",    kind: "makeup", from: "", to: "", dur: 45, note: "לפי שקד: עדית ושלומית, מגיעות 13:30", order: 3 },
+    vicky:  { name: "ויקי שאולוב",   kind: "hair",   from: "", to: "", dur: 45, note: "שקד 10:00–12:00. לפי שקד גם: איילי, ליבי, תמר, עדית (עם העוזרת)", order: 4 },
+    vicky2: { name: "העוזרת של ויקי", kind: "hair",   from: "", to: "", dur: 45, note: "", order: 5 },
+    chen:   { name: "חן שקד",        kind: "curls",  from: "", to: "", dur: 45, note: "לפי שקד: אגם, ענבר, חני. עדי – בבדיקה", order: 6 }
   }
 };
 
@@ -217,7 +307,9 @@ const SEED = {
 let DATA = null;
 let mode = "connecting"; // live | poll | local | denied | offline
 let es = null, pollTimer = null, retryTimer = null;
-const openNotes = new Set();
+let ME = null;
+try { ME = localStorage.getItem(ME_KEY) || null; } catch (e) {}
+const ui = { screen: ME ? "choose" : "home", openNotes: new Set() };
 const app = document.getElementById("app");
 
 /* ===== עזרים ===== */
@@ -225,9 +317,7 @@ const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&a
 const clone = o => JSON.parse(JSON.stringify(o));
 function toMin(t){ if (!t || !/^\d{1,2}:\d{2}/.test(t)) return null; const p = t.split(":"); return (+p[0]) * 60 + (+p[1]); }
 function toT(m){ m = Math.max(0, Math.min(1439, m)); return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); }
-const keyOf = m => "t" + toT(m).replace(":", "");
-const keyTime = k => k.slice(1, 3) + ":" + k.slice(3, 5);
-const rng = (a, b) => toT(a) + "–" + toT(b);
+const rng = (a, b) => "\u2066" + toT(a) + "–" + toT(b) + "\u2069";
 const uid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 function ordered(o){ return Object.entries(o || {}).filter(([, v]) => v && typeof v === "object").sort((x, y) => (x[1].order || 0) - (y[1].order || 0) || (x[0] < y[0] ? -1 : 1)); }
 function getIn(o, parts){ for (const p of parts) { if (o == null) return undefined; o = o[p]; } return o; }
@@ -240,27 +330,62 @@ function setIn(o, parts, val){
   return o;
 }
 function nextOrder(o){ return ordered(o).reduce((m, [, v]) => Math.max(m, v.order || 0), 0) + 1; }
-function personName(id){ if (id === BREAK) return "הפסקה"; const p = DATA.people && DATA.people[id]; return p ? (p.name || "ללא שם") : "שם שנמחק"; }
-function vendorWhat(v){ return (v.role || (KINDS[v.kind] || KINDS.other).label) + " אצל " + (v.name || "ספקית ללא שם"); }
-function slotsOf(v){
-  const a = toMin(v.from), b = toMin(v.to), d = Number(v.dur);
-  if (a == null || b == null || !(d >= 5) || b <= a) return [];
-  const out = []; for (let t = a; t + d <= b && out.length < 80; t += d) out.push({ key: keyOf(t), start: t, end: t + d });
-  return out;
-}
 function daysLeft(){ const n = new Date(); return Math.round((WEDDING - new Date(n.getFullYear(), n.getMonth(), n.getDate())) / 86400000); }
 const plural = (n, one, many) => n === 1 ? one : n + " " + many;
+const info = () => DATA.info || {};
+const photographer = () => info().photographer || "אלכס";
+
+function pgroup(id, p){ if (p && GROUPS[p.group]) return p.group; if (id === "shaked" || (p && p.role === "כלה")) return "bride"; if (p && /^(אם|אמא)/.test(p.role || "")) return "mom"; return "girl"; }
+function isBridePid(pid){ const p = (DATA.people || {})[pid]; return !!p && pgroup(pid, p) === "bride"; }
+function personName(id){ if (id === BREAK) return "הפסקה"; const p = DATA.people && DATA.people[id]; return p ? (p.name || "ללא שם") : "שם שנמחק"; }
+function vkind(v){ if (v.kind === "hair" && /תלתל/.test(v.role || "")) return "curls"; if (KINDS[v.kind]) return v.kind; return /תלתל/.test(v.role || "") ? "curls" : /שיער|ספר/.test(v.role || "") ? "hair" : "makeup"; }
+function vendorWhat(v){ return KINDS[vkind(v)].short + " אצל " + (v.name || "ספקית ללא שם"); }
+function stdDur(v){ const d = Number(v.dur); return d >= 5 ? d : 45; }
+
+/* ===== זהות והרשאות ===== */
+function meParse(){ if (!ME) return null; const i = ME.indexOf(":"); return { t: ME.slice(0, i), id: ME.slice(i + 1) }; }
+function meValid(){ const m = meParse(); if (!m || !DATA) return false; if (m.t === "p") return !!(DATA.people || {})[m.id]; if (m.t === "v") return !!(DATA.vendors || {})[m.id]; return m.t === "g" || m.t === "ph"; }
+function isAdmin(){ const m = meParse(); return !!m && (m.t === "g" || (m.t === "p" && isBridePid(m.id))); }
+function myPid(){ const m = meParse(); return m && m.t === "p" ? m.id : null; }
+function myVid(){ const m = meParse(); return m && m.t === "v" ? m.id : null; }
+function isPhotographer(){ const m = meParse(); return !!m && m.t === "ph"; }
+function whoName(code){
+  if (!code) return ""; const i = code.indexOf(":"), t = code.slice(0, i), id = code.slice(i + 1);
+  if (t === "p") return personName(id); if (t === "v") return ((DATA.vendors || {})[id] || {}).name || "ספקית"; if (t === "g") return "איל"; if (t === "ph") return photographer(); return "";
+}
+function canPath(path){
+  const ps = path.split("/");
+  if (isAdmin()) return true;
+  if (ps[0] === "vendors") return myVid() === ps[1];
+  if (ps[0] === "photo") return isPhotographer();
+  if (ps[0] === "people") return myPid() === ps[1] && ["arrive", "doneMakeup", "doneHair"].includes(ps[2]);
+  return false;
+}
+
+/* ===== תורים: נבנים מהשעות, תור כלה = שעתיים והתורים שאחריו זזים ===== */
+function slotsOf(vid, v, bkOverride){
+  const a = toMin(v.from), b = toMin(v.to), d = Number(v.dur);
+  if (a == null || b == null || !(d >= 5) || b <= a) return [];
+  const bk = bkOverride || ((DATA.book || {})[vid] || {}), out = []; let t = a;
+  for (let i = 0; i < 120; i++) {
+    const key = "s" + i, pid = bk[key] || "", bride = !!pid && pid !== BREAK && isBridePid(pid), len = bride ? BRIDE_DUR : d;
+    if (t + len > b) break;
+    out.push({ key, i, start: t, end: t + len, pid, bride });
+    t += len;
+  }
+  return out;
+}
 
 /* ===== ניתוח: התנגשויות ===== */
 function analyze(){
   const issues = [], flags = {}, runsBy = {}, orphans = {};
   function flag(keys, vid, sev, msg){ keys.forEach(k => { const id = vid + "|" + k; if (!flags[id] || flags[id].sev !== "bad") flags[id] = { sev, msg }; }); }
   ordered(DATA.vendors).forEach(([vid, v]) => {
-    const slots = slotsOf(v), bk = (DATA.bookings || {})[vid] || {}, keys = new Set(slots.map(s => s.key));
+    const slots = slotsOf(vid, v), bk = (DATA.book || {})[vid] || {}, keys = new Set(slots.map(s => s.key));
     let run = null;
     const close = () => { if (run) (runsBy[run.pid] = runsBy[run.pid] || []).push(run); run = null; };
     slots.forEach(s => {
-      const pid = bk[s.key];
+      const pid = s.pid;
       if (pid && pid !== BREAK) {
         if (run && run.pid === pid && run.end === s.start) { run.end = s.end; run.keys.push(s.key); }
         else { close(); run = { pid, vid, v, start: s.start, end: s.end, keys: [s.key] }; }
@@ -270,7 +395,7 @@ function analyze(){
     const orph = Object.keys(bk).filter(k => !keys.has(k) && bk[k]);
     if (orph.length) {
       orphans[vid] = orph;
-      orph.forEach(k => issues.push({ sev: "warn", vid, text: (v.name || "ספקית") + ": התור של " + personName(bk[k]) + " ב־" + keyTime(k) + " כבר לא קיים אחרי שינוי השעות" }));
+      orph.forEach(k => { if (bk[k] !== BREAK) issues.push({ sev: "warn", vid, pid: bk[k], text: (v.name || "ספקית") + ": התור של " + personName(bk[k]) + " כבר לא נכנס בשעות העבודה" }); });
     }
   });
   Object.entries(runsBy).forEach(([pid, runs]) => {
@@ -279,28 +404,27 @@ function analyze(){
     for (let i = 0; i < runs.length; i++) for (let j = i + 1; j < runs.length; j++) {
       const x = runs[i], y = runs[j];
       if (x.vid !== y.vid && x.start < y.end && y.start < x.end) {
-        const t = name + ": " + vendorWhat(x.v) + " (" + rng(x.start, x.end) + ") באותו זמן כמו " + vendorWhat(y.v) + " (" + rng(y.start, y.end) + ")";
-        issues.push({ sev: "bad", vid: x.vid, text: t });
+        issues.push({ sev: "bad", vid: x.vid, pid, text: name + ": " + vendorWhat(x.v) + " (" + rng(x.start, x.end) + ") באותו זמן כמו " + vendorWhat(y.v) + " (" + rng(y.start, y.end) + ")" });
         flag(x.keys, x.vid, "bad", "חופף ל" + vendorWhat(y.v) + " " + rng(y.start, y.end));
         flag(y.keys, y.vid, "bad", "חופף ל" + vendorWhat(x.v) + " " + rng(x.start, x.end));
       }
     }
     const arr = toMin(p.arrive), rdy = toMin(p.readyBy);
     runs.forEach(r => {
-      if (arr != null && r.start < arr) { issues.push({ sev: "bad", vid: r.vid, text: name + ": " + vendorWhat(r.v) + " ב־" + toT(r.start) + ", אבל היא מגיעה רק ב־" + p.arrive }); flag(r.keys, r.vid, "bad", "מגיעה רק ב־" + p.arrive); }
-      if (rdy != null && r.end > rdy) { issues.push({ sev: "bad", vid: r.vid, text: name + ": " + vendorWhat(r.v) + " נגמר ב־" + toT(r.end) + ", אבל היא צריכה להיות מוכנה עד " + p.readyBy }); flag(r.keys, r.vid, "bad", "צריכה להיות מוכנה עד " + p.readyBy); }
+      if (arr != null && r.start < arr) { issues.push({ sev: "bad", vid: r.vid, pid, text: name + ": " + vendorWhat(r.v) + " ב־" + toT(r.start) + ", אבל היא מגיעה רק ב־" + p.arrive }); flag(r.keys, r.vid, "bad", "מגיעה רק ב־" + p.arrive); }
+      if (rdy != null && r.end > rdy) { issues.push({ sev: "bad", vid: r.vid, pid, text: name + ": " + vendorWhat(r.v) + " נגמר ב־" + toT(r.end) + ", אבל היא צריכה להיות מוכנה עד " + p.readyBy }); flag(r.keys, r.vid, "bad", "צריכה להיות מוכנה עד " + p.readyBy); }
     });
     if (arr != null && runs.length) {
       const g0 = runs[0].start - arr;
-      if (g0 > 30) { issues.push({ sev: "warn", vid: runs[0].vid, text: name + ": מגיעה ב־" + p.arrive + " ומחכה " + g0 + " דק׳ עד התור הראשון" }); flag(runs[0].keys, runs[0].vid, "warn", "המתנה של " + g0 + " דק׳ מההגעה"); }
-      for (let k = 1; k < runs.length; k++) { const g = runs[k].start - runs[k - 1].end; if (g > 30) { issues.push({ sev: "warn", vid: runs[k].vid, text: name + ": מחכה " + g + " דק׳ בין התורים" }); flag(runs[k].keys, runs[k].vid, "warn", "המתנה של " + g + " דק׳ מהתור הקודם"); } }
+      if (g0 > 30) { issues.push({ sev: "warn", vid: runs[0].vid, pid, text: name + ": מגיעה ב־" + p.arrive + " ומחכה " + g0 + " דק׳ עד התור הראשון" }); flag(runs[0].keys, runs[0].vid, "warn", "המתנה של " + g0 + " דק׳ מההגעה"); }
+      for (let k = 1; k < runs.length; k++) { const g = runs[k].start - runs[k - 1].end; if (g > 30) { issues.push({ sev: "warn", vid: runs[k].vid, pid, text: name + ": מחכה " + g + " דק׳ בין התורים" }); flag(runs[k].keys, runs[k].vid, "warn", "המתנה של " + g + " דק׳ מהתור הקודם"); } }
     }
   });
   issues.sort((x, y) => (x.sev === "bad" ? 0 : 1) - (y.sev === "bad" ? 0 : 1));
   return { issues, flags, runsBy, orphans };
 }
 
-/* ===== תצוגה ===== */
+/* ===== תצוגה משותפת ===== */
 function statusHTML(){
   const m = {
     connecting: ["", "מתחבר…"],
@@ -308,137 +432,240 @@ function statusHTML(){
     poll: ["ok", "מחובר · מתעדכן כל כמה שניות"],
     local: ["warn", "מצב מקומי: השינויים נשמרים רק במכשיר הזה"],
     denied: ["bad", "אין הרשאה למסד הנתונים (צריך לעדכן את הכללים ב־Firebase). השינויים נשמרים רק במכשיר הזה"],
-    offline: ["bad", "אין חיבור. שינויים שתעשי עכשיו לא יישמרו – מנסה להתחבר שוב…"]
+    offline: ["bad", "אין חיבור. שינויים שתעשו עכשיו לא יישמרו – מנסה להתחבר שוב…"]
   }[mode];
   return '<span class="status ' + m[0] + '" role="status"><i></i>' + m[1] + "</span>";
 }
-function header(){
-  const info = DATA.info || {}, d = daysLeft();
-  const cd = d > 1 ? "עוד " + d + " ימים" : d === 1 ? "מחר!" : d === 0 ? "היום!" : "";
-  const bride = (DATA.people || {}).shaked;
+function countdown(){ const d = daysLeft(); return d > 1 ? "עוד " + d + " ימים" : d === 1 ? "מחר!" : d === 0 ? "היום!" : ""; }
+function timesHTML(){
+  const bride = ordered(DATA.people).find(([id, p]) => pgroup(id, p) === "bride");
   const ph = ordered(DATA.photo).map(([, r]) => r).filter(r => r.start).sort((a, b) => toMin(a.start) - toMin(b.start));
-  let times = bride && bride.readyBy ? '<li class="key"><b>' + esc(bride.readyBy) + "</b>שקד מוכנה לגמרי</li>" : "";
-  times += ph.map(r => { const dur = toMin(r.end) - toMin(r.start); return "<li><b>" + esc(dur > 0 && dur <= 15 ? r.start : r.start + "–" + r.end) + "</b>" + esc(r.label || "") + "</li>"; }).join("");
-  if (info.leave) times += "<li><b>" + esc(info.leave) + "</b>יציאה לאולם</li>";
-  if (info.reception) times += "<li><b>" + esc(info.reception) + "</b>קבלת פנים</li>";
-  return '<header class="top"><div class="title-row"><div><p class="eyebrow">' + esc(info.date || "") + "</p><h1>" + esc(info.title || "") + "</h1></div>" +
-    (cd ? '<div class="count">' + cd + "</div>" : "") + '</div><ul class="times">' + times + "</ul>" + statusHTML() + "</header>" +
-    '<div class="howto"><div><b>ספקיות:</b> כתבו את השם, מתי אתן מגיעות, מתי מסיימות ומשך תור ממוצע. טבלת התורים נבנית לבד.</div>' +
-    "<div><b>מתארגנות:</b> בוחרות את השם שלכן ליד תור פנוי. תור שכבר תפוס? מוסיפות הערה ומתאמות.</div>" +
-    "<div><b>שימו לב:</b> הדף מסמן באדום תור שחופף לתור אחר שלך (למשל איפור ושיער באותה שעה).</div></div>";
+  let t = bride && bride[1].readyBy ? '<li class="key"><b>' + esc(bride[1].readyBy) + "</b>" + esc(bride[1].name) + " מוכנה לגמרי</li>" : "";
+  t += ph.map(r => { const dur = toMin(r.end) - toMin(r.start); return "<li><b>" + esc(dur > 0 && dur <= 15 ? r.start : r.start + "–" + r.end) + "</b>" + esc(r.label || "") + "</li>"; }).join("");
+  if (info().leave) t += "<li><b>" + esc(info().leave) + "</b>יציאה לאולם</li>";
+  if (info().reception) t += "<li><b>" + esc(info().reception) + "</b>קבלת פנים</li>";
+  return '<ul class="times">' + t + "</ul>";
 }
-function issuesHTML(a){
-  if (!a.issues.length) return '<div class="issues ok"><b>אין התנגשויות.</b> אף אחת לא משובצת לשני טיפולים באותו זמן.</div>';
-  return '<div class="issues has"><ul>' + a.issues.map(it => '<li><span class="sev ' + (it.sev === "bad" ? "s-bad" : "s-warn") + '">' + (it.sev === "bad" ? "התנגשות" : "לתשומת לב") + '</span><a href="#v-' + esc(it.vid) + '">' + esc(it.text) + "</a></li>").join("") + "</ul></div>";
+function header(){
+  const cd = countdown();
+  return '<header class="top"><div class="title-row"><div><p class="eyebrow">' + esc(info().date || "") + "</p><h1>" + esc(info().title || "") + "</h1></div>" +
+    (cd ? '<div class="count">' + cd + "</div>" : "") + "</div>" + timesHTML() + statusHTML() + "</header>";
 }
+function navHTML(){
+  return '<nav class="nav"><span class="hi">שלום, <b>' + esc(whoName(ME)) + "</b>" + (isAdmin() ? '<span class="tag-admin">יכול/ה לשנות הכול</span>' : "") + "</span>" +
+    '<div class="seg" role="group" aria-label="תצוגה"><button type="button" data-act="screen" data-s="mine" aria-pressed="' + (ui.screen === "mine") + '">הלו״ז שלי</button><button type="button" data-act="screen" data-s="full" aria-pressed="' + (ui.screen === "full") + '">הלו״ז המלא</button></div>' +
+    '<button type="button" class="linkbtn" data-act="home">החלפת משתמש</button></nav>';
+}
+function issuesHTML(list){
+  if (!list.length) return '<div class="issues ok"><b>אין התנגשויות.</b> אף אחת לא משובצת לשני טיפולים באותו זמן.</div>';
+  return '<div class="issues has"><ul>' + list.map(it => '<li><span class="sev ' + (it.sev === "bad" ? "s-bad" : "s-warn") + '">' + (it.sev === "bad" ? "התנגשות" : "לתשומת לב") + '</span><a href="#v-' + esc(it.vid) + '" data-act="goto" data-v="' + esc(it.vid) + '">' + esc(it.text) + "</a></li>").join("") + "</ul></div>";
+}
+
+/* ===== מסך בית ===== */
+const BOW = '<svg class="bow" viewBox="0 0 48 20" aria-hidden="true"><path d="M3 3 Q12 7 21 8 Q12 13 3 17 Q1 10 3 3Z M45 3 Q36 7 27 8 Q36 13 45 17 Q47 10 45 3Z" fill="#f2f2f5" opacity=".92"/><rect x="20" y="6" width="8" height="8" rx="2" fill="#ffffff"/></svg>';
+function pearls(){
+  let c = ""; const n = 13;
+  for (let i = 0; i < n; i++) { const x = 12 + i * (196 / (n - 1)), u = (x - 110) / 100, y = 6 + 14 * (1 - u * u), r = i === 6 ? 6.2 : 4.6 + 0.9 * (1 - Math.abs(u)); c += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r.toFixed(1) + '" fill="url(#pg)" stroke="#d8c9ad" stroke-width=".5"/>'; }
+  return '<svg class="orn" viewBox="0 0 220 30" aria-hidden="true"><defs><radialGradient id="pg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#f6f0e6"/><stop offset="1" stop-color="#cdbfa6"/></radialGradient></defs><path d="M12 6 Q110 46 208 6" fill="none" stroke="#cdb98f" stroke-width=".8"/>' + c + "</svg>";
+}
+function homeHTML(){
+  const cd = countdown();
+  const card = (code, cls, name, sub, extra) => '<button type="button" class="who ' + cls + (ME === code ? " sel" : "") + '" data-act="iam" data-me="' + esc(code) + '">' + (extra || "") + "<b>" + esc(name) + "</b><small>" + esc(sub) + "</small></button>";
+  const ppl = ordered(DATA.people);
+  const brides = ppl.filter(([id, p]) => pgroup(id, p) === "bride"), girls = ppl.filter(([id, p]) => pgroup(id, p) === "girl"), moms = ppl.filter(([id, p]) => pgroup(id, p) === "mom");
+  const grp = (title, inner, cls) => inner ? '<section><h2 class="gh">' + title + '</h2><div class="wgrid' + (cls ? " " + cls : "") + '">' + inner + "</div></section>" : "";
+  return '<div class="home"><div class="hero"><p class="eyebrow">' + esc(info().date || "") + "</p><h1>" + esc(info().title || "") + "</h1>" + (cd ? '<p class="count">' + cd + "</p>" : "") +
+    '<p class="lead">מי את/ה? לחצו על הכרטיס שלכם</p></div>' +
+    grp("הזוג", brides.map(([id, p]) => card("p:" + id, "pearl", p.name, "הכלה", pearls())).join("") + card("g:eyal", "tux", "איל", "החתן", BOW), "couple") +
+    grp("הבנות", girls.map(([id, p]) => card("p:" + id, "gown", p.name, p.role || "")).join("")) +
+    grp("האמהות", moms.map(([id, p]) => card("p:" + id, "royal", p.name, p.role || "")).join("")) +
+    grp("איפור ושיער", ordered(DATA.vendors).map(([id, v]) => card("v:" + id, "emerald", v.name || "ספקית", KINDS[vkind(v)].label)).join("")) +
+    grp("צילום", card("ph:photo", "sky", photographer(), "צלם")) +
+    '<div style="text-align:center">' + statusHTML() + "</div></div>";
+}
+function chooseHTML(){
+  return '<div class="choose"><p class="eyebrow">' + esc(info().date || "") + "</p><h1>שלום, " + esc(whoName(ME)) + "</h1>" +
+    '<p class="lead">מה תרצו לראות?</p><div class="opts">' +
+    '<button type="button" class="bigbtn primary" data-act="screen" data-s="mine"><b>הלו״ז שלי</b><small>רק מה שקשור אליך</small></button>' +
+    '<button type="button" class="bigbtn" data-act="screen" data-s="full"><b>הלו״ז המלא</b><small>כל הטבלאות, הצלם וכל המתארגנות</small></button></div>' +
+    '<button type="button" class="linkbtn" data-act="home">זה לא אני – החלפת משתמש</button></div>';
+}
+
+/* ===== טבלת צלם ===== */
 function photoHTML(){
-  const rows = ordered(DATA.photo);
-  return '<h2>צלם <small>הלו״ז גמיש לפי הצורך</small></h2><section class="tcard ph" id="photo"><table><thead><tr><th>שעה</th><th>מה מצלמים</th><th><span class="sr">מחיקה</span></th></tr></thead><tbody>' +
-    rows.map(([id, r]) => '<tr class="prow"><td><div class="tpair"><input type="time" step="300" id="ph-' + id + '-s" data-path="photo/' + id + '/start" value="' + esc(r.start) + '" aria-label="התחלה"><span>–</span><input type="time" step="300" id="ph-' + id + '-e" data-path="photo/' + id + '/end" value="' + esc(r.end) + '" aria-label="סיום"></div></td>' +
+  const rows = ordered(DATA.photo), ed = isAdmin() || isPhotographer();
+  const body = rows.map(([id, r]) => ed
+    ? '<tr class="prow"><td><div class="tpair"><input type="time" step="300" id="ph-' + id + '-s" data-path="photo/' + id + '/start" value="' + esc(r.start) + '" aria-label="התחלה"><span>–</span><input type="time" step="300" id="ph-' + id + '-e" data-path="photo/' + id + '/end" value="' + esc(r.end) + '" aria-label="סיום"></div></td>' +
       '<td><input type="text" id="ph-' + id + '-l" data-path="photo/' + id + '/label" value="' + esc(r.label) + '" placeholder="למשל: לוקיישן ראשון" aria-label="מה מצלמים"></td>' +
-      '<td class="nt"><button type="button" class="btn ghost small" data-act="del-photo" data-id="' + id + '" aria-label="מחיקת השורה">✕</button></td></tr>').join("") +
-    '</tbody></table><div class="tfoot"><button type="button" class="btn small" data-act="add-photo">הוספת שורה</button></div></section>';
+      '<td class="nt"><button type="button" class="btn ghost small" data-act="del-photo" data-id="' + id + '" aria-label="מחיקת השורה">✕</button></td></tr>'
+    : '<tr><td class="tm">' + esc((r.start || "") + "–" + (r.end || "")) + "</td><td>" + esc(r.label || "") + "</td></tr>").join("");
+  return '<h2>צלם – ' + esc(photographer()) + ' <small>הלו״ז גמיש לפי הצורך</small></h2><section class="tcard ph" id="photo"><table><thead><tr><th>שעה</th><th>מה מצלמים</th>' + (ed ? '<th><span class="sr">מחיקה</span></th>' : "") + "</tr></thead><tbody>" + body + "</tbody></table>" +
+    (ed ? '<div class="tfoot"><button type="button" class="btn small" data-act="add-photo">הוספת שורה</button></div>' : "") + "</section>";
 }
+
+/* ===== טבלת ספקית ===== */
 function peopleOptions(sel){
   const opts = ['<option value=""' + (sel ? "" : " selected") + ">מקום פנוי</option>"];
-  ordered(DATA.people).forEach(([id, p]) => opts.push('<option value="' + id + '"' + (sel === id ? " selected" : "") + ">" + esc(p.name || "ללא שם") + "</option>"));
+  ordered(DATA.people).forEach(([id, p]) => opts.push('<option value="' + id + '"' + (sel === id ? " selected" : "") + ">" + esc(p.name || "ללא שם") + (pgroup(id, p) === "bride" ? " (תור כלה – שעתיים)" : "") + "</option>"));
   opts.push('<option value="' + BREAK + '"' + (sel === BREAK ? " selected" : "") + ">— הפסקה / לא זמינה —</option>");
   if (sel && sel !== BREAK && !(DATA.people || {})[sel]) opts.push('<option value="' + esc(sel) + '" selected>שם שנמחק</option>');
   return opts.join("");
 }
+function slotCell(vid, v, s, k){
+  const val = s.pid, me = myPid(), admin = isAdmin(), want = ((DATA.want || {})[vid] || {})[s.key] || {};
+  let cell;
+  if (admin) {
+    const cls = val === BREAK ? "brk" : val ? "taken" : "free";
+    cell = '<select class="book ' + cls + '" id="b-' + vid + "-" + s.key + '" data-v="' + vid + '" data-k="' + s.key + '" aria-label="' + esc("תור " + rng(s.start, s.end) + " אצל " + (v.name || "")) + '">' + peopleOptions(val) + "</select>";
+  } else if (val === BREAK) {
+    cell = '<span class="st brk">הפסקה</span>' + (myVid() === vid ? ' <button type="button" class="btn small" data-act="unbreak" data-v="' + vid + '" data-k="' + s.key + '">ביטול הפסקה</button>' : "");
+  } else if (!val) {
+    if (me) cell = '<button type="button" class="take" data-act="take" data-v="' + vid + '" data-k="' + s.key + '">מקום פנוי · לחצי לתפוס</button>';
+    else cell = '<span class="st free">מקום פנוי</span>' + (myVid() === vid ? ' <button type="button" class="btn small" data-act="break" data-v="' + vid + '" data-k="' + s.key + '">סימון הפסקה</button>' : "");
+  } else if (me && val === me) {
+    cell = '<button type="button" class="tname me" data-act="release" data-v="' + vid + '" data-k="' + s.key + '"><span>' + esc(personName(val)) + " · התור שלך</span><small>לחיצה לביטול</small></button>";
+  } else if (me) {
+    const iw = !!want[me];
+    cell = '<button type="button" class="tname" data-act="want" data-v="' + vid + '" data-k="' + s.key + '" aria-pressed="' + iw + '"><span>' + esc(personName(val)) + "</span><small>" + (iw ? "סימנת שאת מעוניינת" : "לחיצה = גם אני מעוניינת") + "</small></button>";
+  } else cell = '<span class="st">' + esc(personName(val)) + "</span>";
+  const wk = Object.keys(want).filter(p => want[p]).sort((a, b) => want[a] - want[b]);
+  if (wk.length) cell += '<div class="wants">' + wk.map(p => (admin || p === me)
+    ? '<button type="button" class="want" data-act="unwant" data-v="' + vid + '" data-k="' + s.key + '" data-p="' + esc(p) + '" title="לחיצה להסרה">' + esc(personName(p)) + " מעוניינת ✕</button>"
+    : '<span class="want">' + esc(personName(p)) + " מעוניינת</span>").join("") + "</div>";
+  if (s.bride) cell += '<span class="btag">תור כלה · שעתיים</span>';
+  const pp = val && val !== BREAK && (DATA.people || {})[val];
+  if (pp && pp[KINDS[k].done]) cell += ' <span class="donebadge">✓ סיימה ' + KINDS[k].short + "</span>";
+  return cell;
+}
+function notesBlock(vid, s, open){
+  const nObj = ((DATA.notes2 || {})[vid] || {})[s.key] || {}, rk = vid + "|" + s.key;
+  const nl = Object.entries(nObj).filter(([, n]) => n && n.text).sort((a, b) => (a[1].at || 0) - (b[1].at || 0));
+  if (!nl.length && !open) return { html: "", count: 0 };
+  const html = (nl.length ? '<ul class="nlist">' + nl.map(([nid, n]) => "<li><span>" + esc(n.text) + (n.by ? ' <small>— ' + esc(whoName(n.by)) + "</small>" : "") + "</span><small>" +
+      (n.at ? new Date(n.at).toLocaleString("he-IL", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }) : "") + "</small>" +
+      ((isAdmin() || n.by === ME) ? '<button type="button" data-act="del-note" data-v="' + vid + '" data-k="' + s.key + '" data-n="' + nid + '" aria-label="מחיקת ההערה">✕</button>' : "") + "</li>").join("") + "</ul>" : "") +
+    (open ? '<div class="nadd"><input type="text" id="ni-' + vid + "-" + s.key + '" data-note="' + rk + '" placeholder="כתבו הערה" aria-label="הערה חדשה"><button type="button" class="btn small primary" data-act="save-note" data-rk="' + rk + '">שמירה</button><button type="button" class="btn small" data-act="close-note" data-rk="' + rk + '">סגירה</button></div>' : "");
+  return { html, count: nl.length };
+}
 function vendorHTML(vid, v, a){
-  const k = KINDS[v.kind] ? v.kind : "other", slots = slotsOf(v), bk = (DATA.bookings || {})[vid] || {}, notes = (DATA.notes || {})[vid] || {};
-  const taken = slots.filter(s => bk[s.key] && bk[s.key] !== BREAK).length, brk = slots.filter(s => bk[s.key] === BREAK).length;
+  const k = vkind(v), slots = slotsOf(vid, v), bk = (DATA.book || {})[vid] || {}, ed = isAdmin() || myVid() === vid, me = myPid();
+  const taken = slots.filter(s => s.pid && s.pid !== BREAK).length, brk = slots.filter(s => s.pid === BREAK).length;
   const p = "vendors/" + vid + "/";
-  const kindSel = '<label class="f kind">סוג<select id="v-' + vid + '-kind" data-path="' + p + 'kind">' + Object.entries(KINDS).map(([kk, kv]) => '<option value="' + kk + '"' + (kk === k ? " selected" : "") + ">" + kv.label + "</option>").join("") + "</select></label>";
   let stats;
-  if (slots.length) {
-    const a0 = toMin(v.from), b0 = toMin(v.to), rem = (b0 - a0) % Number(v.dur);
-    stats = "<span><b>" + slots.length + "</b> תורים</span><span><b>" + taken + "</b> תפוסים</span><span><b>" + (slots.length - taken - brk) + "</b> פנויים</span>" +
-      (rem ? '<span class="muted">(' + rem + " דק׳ בסוף היום קצרות מתור שלם)</span>" : "");
-  } else stats = '<span class="muted">' + (toMin(v.from) != null && toMin(v.to) != null && toMin(v.to) <= toMin(v.from) ? "שעת הסיום צריכה להיות אחרי שעת ההגעה" : "כדי ליצור תורים: למלא שעת הגעה, שעת סיום ומשך תור") + "</span>";
+  if (slots.length) stats = "<span><b>" + slots.length + "</b> תורים</span><span><b>" + taken + "</b> תפוסים</span><span><b>" + (slots.length - taken - brk) + "</b> פנויים</span>";
+  else stats = '<span class="muted">' + (toMin(v.from) != null && toMin(v.to) != null && toMin(v.to) <= toMin(v.from) ? "שעת הסיום צריכה להיות אחרי שעת ההגעה" : "התורים יופיעו אחרי שהספקית תמלא שעת הגעה, שעת סיום ומשך תור") + "</span>";
+  let head;
+  if (ed) {
+    head = '<div class="row1"><label class="f">שם הספקית<input type="text" class="vname" id="v-' + vid + '-name" data-path="' + p + 'name" value="' + esc(v.name) + '" placeholder="השם שלך"></label>' +
+      '<label class="f">סוג<select id="v-' + vid + '-kind" data-path="' + p + 'kind">' + Object.entries(KINDS).map(([kk, kv]) => '<option value="' + kk + '"' + (kk === k ? " selected" : "") + ">" + kv.label + "</option>").join("") + "</select></label></div>" +
+      '<div class="row2"><label class="f">מגיעה בשעה<input type="time" step="300" id="v-' + vid + '-from" data-path="' + p + 'from" value="' + esc(v.from) + '"></label>' +
+      '<label class="f">מסיימת בשעה<input type="time" step="300" id="v-' + vid + '-to" data-path="' + p + 'to" value="' + esc(v.to) + '"></label>' +
+      '<label class="f durf">משך תור סטנדרטי (דקות)<input type="number" min="5" max="240" step="5" inputmode="numeric" id="v-' + vid + '-dur" data-path="' + p + 'dur" value="' + esc(v.dur) + '" placeholder="45"><span class="hint">תור כלה = שעתיים</span></label></div>' +
+      '<label class="f">הערה כללית<input type="text" class="vnote" id="v-' + vid + '-note" data-path="' + p + 'note" value="' + esc(v.note) + '" placeholder="למשל: אחרי 13:00 רק תלתלים"></label>';
+  } else {
+    head = '<div class="ro-head"><h3>' + esc(v.name || "ספקית") + '</h3><span class="ktag">' + KINDS[k].label + "</span></div>" +
+      '<p class="ro-meta">' + (v.from && v.to ? "<span>" + esc(v.from) + "–" + esc(v.to) + "</span> · " : "") + "תור סטנדרטי " + stdDur(v) + " דק׳ · תור כלה שעתיים</p>" +
+      (v.note ? '<p class="vnote muted">' + esc(v.note) + "</p>" : "");
+  }
   let body = "";
   if (slots.length) {
     body = "<table><thead><tr><th>שעה</th><th>מי בתור</th><th>הערות</th></tr></thead><tbody>" + slots.map(s => {
-      const val = bk[s.key] || "", f = a.flags[vid + "|" + s.key], nObj = notes[s.key] || {}, nl = ordered(Object.fromEntries(Object.entries(nObj).map(([nid, n]) => [nid, Object.assign({ order: n.at || 0 }, n)])));
-      const rk = vid + "|" + s.key, open = openNotes.has(rk), cls = val === BREAK ? "brk" : val ? "taken" : "free";
-      const pp = val && val !== BREAK && (DATA.people || {})[val], dn = pp && ((k === "makeup" && pp.doneMakeup) || (k === "hair" && pp.doneHair));
-      let html = '<tr class="slot ' + (val && val !== BREAK ? "taken" : "") + (dn ? " done" : "") + (f ? " " + f.sev : "") + '"><td class="tm">' + rng(s.start, s.end) + "</td>" +
-        '<td><select class="book ' + cls + '" id="b-' + vid + "-" + s.key + '" data-v="' + vid + '" data-k="' + s.key + '" aria-label="' + esc("תור " + rng(s.start, s.end) + " אצל " + (v.name || "")) + '">' + peopleOptions(val) + "</select>" +
-        (dn ? '<span class="donebadge">✓ סיימה ' + KINDS[k].label + "</span>" : "") + (f ? '<div class="rmsg">' + esc(f.msg) + "</div>" : "") + "</td>" +
-        '<td class="nt"><button type="button" class="nbtn' + (nl.length ? " has" : "") + '" data-act="toggle-notes" data-rk="' + rk + '" aria-expanded="' + open + '">' + (nl.length ? "הערות (" + nl.length + ")" : "+ הערה") + "</button></td></tr>";
-      if (nl.length || open) {
-        html += '<tr class="notes slot' + (f ? " " + f.sev : "") + '"><td colspan="3">' +
-          (nl.length ? '<ul class="nlist">' + nl.map(([nid, n]) => "<li><span>" + esc(n.text) + "</span><small>" + (n.at ? new Date(n.at).toLocaleString("he-IL", { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }) : "") + '</small><button type="button" data-act="del-note" data-v="' + vid + '" data-k="' + s.key + '" data-n="' + nid + '" aria-label="מחיקת ההערה">✕</button></li>').join("") + "</ul>" : "") +
-          (open ? '<div class="nadd"><input type="text" id="ni-' + vid + "-" + s.key + '" data-note="' + rk + '" placeholder="למשל: איילי מעוניינת בתור, יוצרת קשר בפרטי" aria-label="הערה חדשה"><button type="button" class="btn small primary" data-act="add-note" data-rk="' + rk + '">הוספה</button></div>' : "") +
-          "</td></tr>";
-      }
+      const f = a.flags[vid + "|" + s.key], rk = vid + "|" + s.key, open = ui.openNotes.has(rk), nb = notesBlock(vid, s, open);
+      const pp = s.pid && s.pid !== BREAK && (DATA.people || {})[s.pid], dn = pp && pp[KINDS[k].done];
+      const cls = "slot" + (s.pid && s.pid !== BREAK ? " taken" : "") + (dn ? " done" : "") + (me && s.pid === me ? " mine-row" : "") + (f ? " " + f.sev : "");
+      let html = '<tr class="' + cls + '"><td class="tm">' + rng(s.start, s.end) + "</td><td>" + slotCell(vid, v, s, k) + (f ? '<div class="rmsg">' + esc(f.msg) + "</div>" : "") + "</td>" +
+        '<td class="nt"><button type="button" class="nbtn' + (nb.count ? " has" : "") + '" data-act="toggle-notes" data-rk="' + rk + '" aria-expanded="' + open + '">' + (nb.count ? "הערות (" + nb.count + ")" : "+ הערה") + "</button></td></tr>";
+      if (nb.html) html += '<tr class="notes ' + cls + '"><td colspan="3">' + nb.html + "</td></tr>";
       return html;
     }).join("") + "</tbody></table>";
   } else body = '<div class="empty">טבלת התורים תופיע כאן אחרי שהספקית תמלא שעות עבודה ומשך תור.</div>';
-  const orph = a.orphans[vid];
-  const orphHTML = orph ? '<div class="orph">' + orph.map(kk => "<div><span>" + esc(personName(bk[kk])) + " ב־" + keyTime(kk) + ": התור כבר לא קיים אחרי שינוי השעות. צריך לבחור תור חדש.</span>" +
-    '<button type="button" class="btn small" data-act="clear-orphan" data-v="' + vid + '" data-k="' + kk + '">ניקוי</button></div>').join("") + "</div>" : "";
-  return '<section class="tcard ' + KINDS[k].cls + '" id="v-' + vid + '"><div class="thead">' +
-    '<div class="row1"><label class="f">שם הספקית<input type="text" class="vname" id="v-' + vid + '-name" data-path="' + p + 'name" value="' + esc(v.name) + '" placeholder="השם שלך"></label>' +
-    '<label class="f">תפקיד<input type="text" id="v-' + vid + '-role" data-path="' + p + 'role" value="' + esc(v.role) + '" placeholder="איפור / שיער / תלתלים"></label>' + kindSel + "</div>" +
-    '<div class="row2"><label class="f">מגיעה בשעה<input type="time" step="300" id="v-' + vid + '-from" data-path="' + p + 'from" value="' + esc(v.from) + '"></label>' +
-    '<label class="f">מסיימת בשעה<input type="time" step="300" id="v-' + vid + '-to" data-path="' + p + 'to" value="' + esc(v.to) + '"></label>' +
-    '<label class="f">משך תור (דקות)<input type="number" min="5" max="240" step="5" inputmode="numeric" id="v-' + vid + '-dur" data-path="' + p + 'dur" value="' + esc(v.dur) + '" placeholder="למשל 45"></label></div>' +
-    '<label class="f">הערה כללית<input type="text" class="vnote" id="v-' + vid + '-note" data-path="' + p + 'note" value="' + esc(v.note) + '" placeholder="למשל: אחרי 13:00 רק תלתלים"></label>' +
-    '<div class="stats">' + stats + "</div></div>" + body + orphHTML +
-    '<div class="tfoot"><button type="button" class="btn ghost small" data-act="del-vendor" data-v="' + vid + '">מחיקת הטבלה</button></div></section>';
+  const orph = (a.orphans[vid] || []).filter(kk => bk[kk] && bk[kk] !== BREAK);
+  const orphHTML = orph.length ? '<div class="orph">' + orph.map(kk => "<div><span>" + esc(personName(bk[kk])) + ": התור כבר לא נכנס בשעות העבודה. צריך לבחור תור חדש.</span>" +
+    (isAdmin() || bk[kk] === me ? '<button type="button" class="btn small" data-act="clear-orphan" data-v="' + vid + '" data-k="' + kk + '">ניקוי</button>' : "") + "</div>").join("") + "</div>" : "";
+  return '<section class="tcard ' + KINDS[k].cls + '" id="v-' + vid + '"><div class="thead">' + head + '<div class="stats">' + stats + "</div></div>" + body + orphHTML +
+    (isAdmin() ? '<div class="tfoot"><button type="button" class="btn ghost small" data-act="del-vendor" data-v="' + vid + '">מחיקת הטבלה</button></div>' : "") + "</section>";
 }
-function peopleHTML(){
-  return '<h2>מתארגנות <small>השמות כאן מופיעים ברשימה הנפתחת</small></h2><section class="tcard"><div class="table-scroll"><table class="ptable"><thead><tr><th>שם</th><th>קרבה</th><th>מגיעה (ריק = בבוקר)</th><th>מוכנה עד</th><th>סיימה איפור</th><th>סיימה שיער</th><th><span class="sr">מחיקה</span></th></tr></thead><tbody>' +
+
+/* ===== מתארגנות ===== */
+function personCard(id, p, a){
+  const runs = (a.runsBy[id] || []).slice().sort((x, y) => x.start - y.start), ed = isAdmin() || myPid() === id, pp = "people/" + id + "/";
+  const badKeys = new Set(Object.entries(a.flags).filter(([, f]) => f.sev === "bad").map(([k]) => k));
+  const last = runs.length ? Math.max.apply(null, runs.map(r => r.end)) : null;
+  return '<article class="pcard' + (runs.length ? "" : " none") + '"><header><h3>' + esc(p.name || "ללא שם") + "</h3><small>" + esc(p.role || "") + "</small></header>" +
+    (ed ? '<label class="arr" for="pc-' + id + '-a">שעת הגעה<input type="time" step="300" id="pc-' + id + '-a" data-path="' + pp + 'arrive" value="' + esc(p.arrive) + '"></label>'
+        : '<p class="arr">שעת הגעה: ' + esc(p.arrive || "מהבוקר") + "</p>") +
+    '<div class="checks"><label class="ck"><input type="checkbox" id="pc-' + id + '-dm" data-path="' + pp + 'doneMakeup"' + (p.doneMakeup ? " checked" : "") + (ed ? "" : " disabled") + ">סיימה איפור</label>" +
+    '<label class="ck"><input type="checkbox" id="pc-' + id + '-dh" data-path="' + pp + 'doneHair"' + (p.doneHair ? " checked" : "") + (ed ? "" : " disabled") + ">סיימה שיער</label></div>" +
+    (runs.length ? '<ul class="plist">' + runs.map(r => '<li class="' + (r.keys.some(k => badKeys.has(r.vid + "|" + k)) ? "bad" : "") + '"><span class="t">' + rng(r.start, r.end) + "</span><span>" + esc(vendorWhat(r.v)) + "</span></li>").join("") + "</ul>" : '<p class="muted" style="font-size:14px">עדיין אין תורים</p>') +
+    (last != null ? "<footer>מוכנה ב־" + toT(last) + (p.readyBy ? " · יעד " + esc(p.readyBy) : "") + "</footer>" : "") + "</article>";
+}
+function peopleAdminHTML(){
+  return '<h2>ניהול מתארגנות <small>רק שקד ואיל רואים את הטבלה הזאת</small></h2><section class="tcard"><div class="table-scroll"><table class="ptable"><thead><tr><th>שם</th><th>קרבה</th><th>קבוצה</th><th>מגיעה (ריק = בבוקר)</th><th>מוכנה עד</th><th><span class="sr">מחיקה</span></th></tr></thead><tbody>' +
     ordered(DATA.people).map(([id, p]) => {
-      const pp = "people/" + id + "/";
+      const pp = "people/" + id + "/", g = pgroup(id, p);
       return '<tr><td><input type="text" id="p-' + id + '-n" data-path="' + pp + 'name" value="' + esc(p.name) + '" aria-label="שם" placeholder="שם"></td>' +
         '<td><input type="text" id="p-' + id + '-r" data-path="' + pp + 'role" value="' + esc(p.role) + '" aria-label="קרבה"></td>' +
+        '<td><select id="p-' + id + '-g" data-path="' + pp + 'group" aria-label="קבוצה">' + Object.entries({ bride: "כלה", girl: "בנות", mom: "אמהות" }).map(([gk, gl]) => '<option value="' + gk + '"' + (gk === g ? " selected" : "") + ">" + gl + "</option>").join("") + "</select></td>" +
         '<td><input type="time" step="300" id="p-' + id + '-a" data-path="' + pp + 'arrive" value="' + esc(p.arrive) + '" aria-label="שעת הגעה"></td>' +
         '<td><input type="time" step="300" id="p-' + id + '-d" data-path="' + pp + 'readyBy" value="' + esc(p.readyBy) + '" aria-label="מוכנה עד"></td>' +
-        '<td class="c"><input type="checkbox" id="p-' + id + '-dm" data-path="' + pp + 'doneMakeup"' + (p.doneMakeup ? " checked" : "") + ' aria-label="' + esc((p.name || "") + " סיימה איפור") + '"></td>' +
-        '<td class="c"><input type="checkbox" id="p-' + id + '-dh" data-path="' + pp + 'doneHair"' + (p.doneHair ? " checked" : "") + ' aria-label="' + esc((p.name || "") + " סיימה שיער") + '"></td>' +
         '<td class="nt"><button type="button" class="btn ghost small" data-act="del-person" data-id="' + id + '" aria-label="מחיקה">✕</button></td></tr>';
     }).join("") + '</tbody></table></div><div class="tfoot"><button type="button" class="btn small" data-act="add-person">הוספת מתארגנת</button></div></section>';
 }
-function scheduleHTML(a){
-  const cards = ordered(DATA.people).map(([id, p]) => {
-    const runs = (a.runsBy[id] || []).slice().sort((x, y) => x.start - y.start);
-    const badKeys = new Set(Object.entries(a.flags).filter(([, f]) => f.sev === "bad").map(([k]) => k));
-    const last = runs.length ? Math.max.apply(null, runs.map(r => r.end)) : null;
-    const pp = "people/" + id + "/";
-    return '<article class="pcard' + (runs.length ? "" : " none") + '"><header><h3>' + esc(p.name || "ללא שם") + "</h3><small>" + esc(p.role || "") + "</small></header>" +
-      '<label class="arr" for="pc-' + id + '-a">שעת הגעה<input type="time" step="300" id="pc-' + id + '-a" data-path="' + pp + 'arrive" value="' + esc(p.arrive) + '"></label>' +
-      '<div class="checks"><label class="ck"><input type="checkbox" id="pc-' + id + '-dm" data-path="' + pp + 'doneMakeup"' + (p.doneMakeup ? " checked" : "") + '>סיימה איפור</label>' +
-      '<label class="ck"><input type="checkbox" id="pc-' + id + '-dh" data-path="' + pp + 'doneHair"' + (p.doneHair ? " checked" : "") + '>סיימה שיער</label></div>' +
-      (runs.length ? '<ul class="plist">' + runs.map(r => '<li class="' + (r.keys.some(k => badKeys.has(r.vid + "|" + k)) ? "bad" : "") + '"><span class="t">' + rng(r.start, r.end) + "</span><span>" + esc(vendorWhat(r.v)) + "</span></li>").join("") + "</ul>" : '<p class="muted" style="font-size:14px">עדיין אין תורים</p>') +
-      (last != null ? "<footer>מוכנה ב־" + toT(last) + (p.readyBy ? " · יעד " + esc(p.readyBy) : "") + "</footer>" : "") + "</article>";
-  }).join("");
-  return '<h2>הלו״ז של כל אחת <small>מתעדכן לבד מהטבלאות</small></h2><div class="cards">' + cards + "</div>" +
-    '<button type="button" class="btn wide" style="margin-top:12px" data-act="add-person">הוספת מתארגנת</button>' +
-    '<div class="export"><div class="actions"><button type="button" class="btn primary" data-act="copy">העתקת הלו״ז כטקסט</button><a class="btn" id="wa-link" href="https://wa.me/?text=' + encodeURIComponent(exportText(a)) + '" target="_blank" rel="noopener">שליחה בוואטסאפ</a><button type="button" class="btn" data-act="share">שיתוף הקישור לדף</button></div>' +
-    '<textarea readonly id="export-text" aria-label="הלו״ז כטקסט">' + esc(exportText(a)) + "</textarea></div>";
+
+/* ===== מסך "הלו״ז המלא" ===== */
+function fullHTML(a){
+  return header() +
+    '<div class="howto"><div><b>בנות ואמהות:</b> לוחצות "לתפוס" ליד תור פנוי. תור תפוס? לחיצה על השם מסמנת שאתן מעוניינות, ולחיצה נוספת מבטלת.</div>' +
+    "<div><b>ספקיות:</b> ממלאות שעת הגעה, שעת סיום ומשך תור סטנדרטי. תור כלה = שעתיים, והתורים שאחריו זזים לבד.</div>" +
+    "<div><b>שימו לב:</b> הדף מסמן באדום תור שחופף לתור אחר שלך (למשל איפור ושיער באותה שעה). רק שקד ואיל יכולים לשנות תורים של אחרות.</div></div>" +
+    issuesHTML(a.issues) + photoHTML() +
+    "<h2>איפור ושיער <small>טבלה לכל ספקית</small></h2>" + ordered(DATA.vendors).map(([vid, v]) => vendorHTML(vid, v, a)).join("") +
+    (isAdmin() ? '<button type="button" class="btn wide" data-act="add-vendor">הוספת טבלה לספקית נוספת</button>' + peopleAdminHTML() : "") +
+    '<h2>הלו״ז של כל אחת <small>מתעדכן לבד מהטבלאות</small></h2><div class="cards">' + ordered(DATA.people).map(([id, p]) => personCard(id, p, a)).join("") + "</div>";
 }
-function exportText(a){
-  const L = ["*" + ((DATA.info || {}).title || "לו״ז התארגנות") + "*", (DATA.info || {}).date || ""];
-  const ph = ordered(DATA.photo).map(([, r]) => r).filter(r => r.start);
-  if (ph.length) { L.push("", "📸 *צלם*"); ph.sort((x, y) => toMin(x.start) - toMin(y.start)).forEach(r => L.push(r.start + "–" + r.end + "  " + (r.label || ""))); }
-  ordered(DATA.people).forEach(([id, p]) => {
-    const runs = (a.runsBy[id] || []).slice().sort((x, y) => x.start - y.start); if (!runs.length) return;
-    L.push("", "*" + (p.name || "") + "*" + (p.arrive ? " (מגיעה " + p.arrive + ")" : "") + (p.doneMakeup ? " ✓איפור" : "") + (p.doneHair ? " ✓שיער" : ""));
-    runs.forEach(r => L.push(rng(r.start, r.end) + "  " + vendorWhat(r.v)));
-  });
-  const bad = a.issues.filter(i => i.sev === "bad").length;
-  if (bad) L.push("", "⚠️ יש " + plural(bad, "התנגשות אחת", "התנגשויות") + " בלו״ז");
-  return L.join("\n");
+
+/* ===== מסך "הלו״ז שלי" ===== */
+function myRunsHTML(pid, a){
+  const runs = (a.runsBy[pid] || []).slice().sort((x, y) => x.start - y.start);
+  const badKeys = {}; Object.entries(a.flags).forEach(([k, f]) => { if (f.sev === "bad") badKeys[k] = f.msg; });
+  if (!runs.length) return '<p class="muted">עדיין אין תורים. כדי לתפוס תור עוברים ל"הלו״ז המלא".</p>';
+  return '<ul class="mylist">' + runs.map(r => {
+    const k = vkind(r.v), bad = r.keys.map(kk => badKeys[r.vid + "|" + kk]).find(Boolean);
+    return '<li class="' + KINDS[k].cls + (bad ? " bad" : "") + '"><span class="t">' + rng(r.start, r.end) + '</span><span class="w"><b>' + esc(KINDS[k].short) + "</b><small>אצל " + esc(r.v.name || "") + "</small>" + (bad ? '<span class="rmsg">' + esc(bad) + "</span>" : "") + "</span>" +
+      ((isAdmin() || myPid() === pid) ? '<button type="button" class="btn small" data-act="release-run" data-v="' + r.vid + '" data-ks="' + r.keys.join(",") + '">ביטול</button>' : "<span></span>") + "</li>";
+  }).join("") + "</ul>";
 }
+function mineHTML(a){
+  const m = meParse(), top = '<header class="top mine-hero"><p class="eyebrow">' + esc(info().date || "") + "</p><h1>הלו״ז של " + esc(whoName(ME)) + "</h1>" + statusHTML() + "</header>";
+  if (m.t === "p") {
+    const p = DATA.people[m.id], pp = "people/" + m.id + "/", bride = pgroup(m.id, p) === "bride";
+    const mine = a.issues.filter(i => i.pid === m.id);
+    const wants = [];
+    Object.entries(DATA.want || {}).forEach(([vid, sm]) => Object.entries(sm || {}).forEach(([k, ws]) => { if (ws && ws[m.id] && DATA.vendors[vid]) { const s = slotsOf(vid, DATA.vendors[vid]).find(x => x.key === k); wants.push({ vid, k, s }); } }));
+    const runs = a.runsBy[m.id] || [], last = runs.length ? Math.max.apply(null, runs.map(r => r.end)) : null;
+    return top +
+      '<div class="panel" style="margin-top:16px"><div class="row"><label class="arr ck" for="me-arr">שעת הגעה <input type="time" step="300" id="me-arr" data-path="' + pp + 'arrive" value="' + esc(p.arrive) + '" style="width:120px"></label>' +
+      '<span class="muted">' + (p.readyBy ? "צריכה להיות מוכנה עד <b>" + esc(p.readyBy) + "</b>" : "") + (last != null ? " · לפי התורים מוכנה ב־<b>" + toT(last) + "</b>" : "") + "</span></div>" +
+      '<div class="checks"><label class="ck"><input type="checkbox" id="me-dm" data-path="' + pp + 'doneMakeup"' + (p.doneMakeup ? " checked" : "") + '>סיימתי איפור</label><label class="ck"><input type="checkbox" id="me-dh" data-path="' + pp + 'doneHair"' + (p.doneHair ? " checked" : "") + ">סיימתי שיער</label></div></div>" +
+      "<h2>התורים שלי</h2>" + myRunsHTML(m.id, a) + (mine.length ? issuesHTML(mine) : "") +
+      (wants.length ? '<h2>תורים שסימנתי שאני מעוניינת בהם</h2><ul class="mylist">' + wants.map(w => { const v = DATA.vendors[w.vid], k = vkind(v), holder = ((DATA.book || {})[w.vid] || {})[w.k];
+          return '<li class="' + KINDS[k].cls + '"><span class="t">' + (w.s ? rng(w.s.start, w.s.end) : "—") + '</span><span class="w"><b>' + esc(vendorWhat(v)) + "</b><small>" + (holder && holder !== BREAK ? "התור אצל " + esc(personName(holder)) : "התור התפנה – אפשר לתפוס אותו") + '</small></span><button type="button" class="btn small" data-act="unwant" data-v="' + w.vid + '" data-k="' + w.k + '" data-p="' + m.id + '">הסרה</button></li>'; }).join("") + "</ul>" : "") +
+      (bride ? photoHTML() : "") +
+      '<p style="margin-top:22px"><button type="button" class="btn primary" data-act="screen" data-s="full">לתפיסת תורים – הלו״ז המלא</button></p>';
+  }
+  if (m.t === "v") return top + issuesHTML(a.issues.filter(i => i.vid === m.id)) + '<div style="margin-top:16px"></div>' + vendorHTML(m.id, DATA.vendors[m.id], a);
+  const bride = ordered(DATA.people).find(([id, p]) => pgroup(id, p) === "bride");
+  return top + '<div style="margin-top:16px">' + timesHTML() + "</div>" + photoHTML() +
+    (bride ? "<h2>הלו״ז של " + esc(bride[1].name) + "</h2>" + myRunsHTML(bride[0], a) : "") +
+    (m.t === "g" ? "<h2>התנגשויות</h2>" + issuesHTML(a.issues) : "");
+}
+
 function view(){
+  if (!DATA) return "";
+  if (!ME || !meValid() || ui.screen === "home") return homeHTML();
+  if (ui.screen === "choose") return chooseHTML();
   const a = analyze();
-  return header() + issuesHTML(a) + photoHTML() +
-    '<h2>ספקיות <small>טבלה לכל ספקית</small></h2>' + ordered(DATA.vendors).map(([vid, v]) => vendorHTML(vid, v, a)).join("") +
-    '<button type="button" class="btn wide" data-act="add-vendor">הוספת טבלה לספקית נוספת</button>' +
-    peopleHTML() + scheduleHTML(a);
+  return navHTML() + (ui.screen === "mine" ? mineHTML(a) : fullHTML(a));
 }
 
 /* ===== רינדור עם שמירת פוקוס ===== */
@@ -447,23 +674,17 @@ function scheduleRender(){ if (rq) return; rq = true; requestAnimationFrame(() =
 function render(){
   if (!DATA) return;
   const ae = document.activeElement; let keep = null;
-  if (ae && ae.id && app.contains(ae)) {
-    keep = { id: ae.id, value: ae.value, dirty: ae.dataset && ae.dataset.dirty === "1" };
-    try { keep.s = ae.selectionStart; keep.e = ae.selectionEnd; } catch (e) {}
-  }
+  if (ae && ae.id && app.contains(ae)) { keep = { id: ae.id, value: ae.value, dirty: ae.dataset && ae.dataset.dirty === "1" }; try { keep.s = ae.selectionStart; keep.e = ae.selectionEnd; } catch (e) {} }
   app.innerHTML = view();
   if (keep) {
     const el = document.getElementById(keep.id);
-    if (el) {
-      if (keep.dirty) { el.value = keep.value; el.dataset.dirty = "1"; }
-      try { el.focus({ preventScroll: true }); if (keep.s != null && el.setSelectionRange) el.setSelectionRange(keep.s, keep.e); } catch (e) {}
-    }
+    if (el) { if (keep.dirty) { el.value = keep.value; el.dataset.dirty = "1"; } try { el.focus({ preventScroll: true }); if (keep.s != null && el.setSelectionRange) el.setSelectionRange(keep.s, keep.e); } catch (e) {} }
   }
 }
 
 /* ===== מסד נתונים (Firebase Realtime Database דרך REST) ===== */
 const url = path => DB_URL.replace(/\/+$/, "") + "/" + ROOT + (path ? "/" + path : "") + ".json";
-function setMode(m){ if (mode === m) return; mode = m; const s = app.querySelector(".status"); if (s) s.outerHTML = statusHTML(); }
+function setMode(m){ if (mode === m) return; mode = m; app.querySelectorAll(".status").forEach(s => { s.outerHTML = statusHTML(); }); }
 function saveLocal(){ try { localStorage.setItem(LS_KEY, JSON.stringify(DATA)); } catch (e) {} }
 function loadLocal(){ try { const d = JSON.parse(localStorage.getItem(LS_KEY) || "null"); if (d) return d; } catch (e) {} return clone(SEED); }
 async function write(path, val){
@@ -478,11 +699,7 @@ async function write(path, val){
   } catch (e) { goOffline(); }
 }
 function goDenied(){ setMode("denied"); stopSync(); saveLocal(); render(); }
-function goOffline(){
-  if (mode === "offline") return;
-  setMode("offline"); stopSync(); render();
-  clearTimeout(retryTimer); retryTimer = setTimeout(connect, 8000);
-}
+function goOffline(){ if (mode === "offline") return; setMode("offline"); stopSync(); render(); clearTimeout(retryTimer); retryTimer = setTimeout(connect, 8000); }
 function stopSync(){ try { es && es.close(); } catch (e) {} es = null; clearInterval(pollTimer); pollTimer = null; }
 async function fetchAll(){
   const r = await fetch(url(""), { cache: "no-store" });
@@ -490,13 +707,26 @@ async function fetchAll(){
   if (!r.ok) throw new Error("HTTP " + r.status);
   return r.json();
 }
+async function migrate(d){
+  // נתונים שנוצרו בגרסה הקודמת: משלימים שדות חדשים בלי לגעת במה שהוזן
+  const fixes = [];
+  if (!d.info) d.info = {};
+  if (!d.info.photographer) fixes.push(["info/photographer", "אלכס"]);
+  Object.entries(d.people || {}).forEach(([id, p]) => { if (p && !GROUPS[p.group]) fixes.push(["people/" + id + "/group", pgroupRaw(id, p)]); });
+  Object.entries(d.vendors || {}).forEach(([id, v]) => { if (!v) return; if (v.role !== undefined || !KINDS[v.kind]) { fixes.push(["vendors/" + id + "/kind", vkind(v)]); fixes.push(["vendors/" + id + "/role", null]); } if (v.dur === "" || v.dur == null) fixes.push(["vendors/" + id + "/dur", 45]); });
+  if (!fixes.length) return;
+  fixes.forEach(([p, v]) => { d = setIn(d, p.split("/"), v); });
+  DATA = d;
+  for (const [p, v] of fixes) { try { await fetch(url(p), v == null ? { method: "DELETE" } : { method: "PUT", body: JSON.stringify(v) }); } catch (e) {} }
+}
+function pgroupRaw(id, p){ if (id === "shaked" || p.role === "כלה") return "bride"; if (/^(אם|אמא)/.test(p.role || "")) return "mom"; return "girl"; }
 async function connect(){
   clearTimeout(retryTimer);
   if (!DB_URL) { DATA = loadLocal(); setMode("local"); render(); return; }
   try {
     let d = await fetchAll();
     if (d == null) { d = clone(SEED); await fetch(url(""), { method: "PUT", body: JSON.stringify(d) }); }
-    DATA = d; setMode("poll"); render(); openStream();
+    DATA = d; await migrate(DATA); setMode("poll"); render(); openStream();
   } catch (e) {
     if (e.denied) { DATA = loadLocal(); goDenied(); return; }
     if (!DATA) DATA = clone(SEED);
@@ -530,119 +760,144 @@ function startPolling(){
 }
 
 /* ===== פעולות ===== */
-async function onBook(sel){
-  const vid = sel.dataset.v, k = sel.dataset.k, val = sel.value;
-  const cur = getIn(DATA, ["bookings", vid, k]) || "";
+function clashesFor(pid, vid, key, bkOverride){
+  const v = DATA.vendors[vid], s = slotsOf(vid, v, bkOverride).find(x => x.key === key); if (!s) return [];
+  const out = [];
+  ordered(DATA.vendors).forEach(([ovid, ov]) => { if (ovid === vid) return; slotsOf(ovid, ov).forEach(os => { if (os.pid === pid && os.start < s.end && s.start < os.end) out.push(vendorWhat(ov) + " " + rng(os.start, os.end)); }); });
+  return out;
+}
+function laterBooked(vid, key){ const i = +key.slice(1), bk = (DATA.book || {})[vid] || {}; return Object.keys(bk).filter(k => +k.slice(1) > i && bk[k] && bk[k] !== BREAK).length; }
+async function freshSlot(vid, key){
+  if (!(mode === "live" || mode === "poll")) return undefined;
+  try { const r = await fetch(url("book/" + vid + "/" + key), { cache: "no-store" }); if (r.ok) return await r.json(); } catch (e) {}
+  return undefined;
+}
+async function onAdminBook(sel){
+  const vid = sel.dataset.v, k = sel.dataset.k, val = sel.value, cur = getIn(DATA, ["book", vid, k]) || "";
   if (val === cur) return;
-  if (cur) {
-    const who = personName(cur);
-    const msg = val ? "התור הזה כבר תפוס (" + who + ").\nאם את רוצה אותו, עדיף להוסיף הערה ולתאם.\n\nלהחליף בכל זאת?" : "לפנות את התור של " + who + "?";
-    if (!confirm(msg)) { sel.value = cur; return; }
-  } else if (val && val !== BREAK && (mode === "live" || mode === "poll")) {
-    try {
-      const r = await fetch(url("bookings/" + vid + "/" + k), { cache: "no-store" });
-      if (r.ok) { const now = await r.json(); if (now && now !== val) { alert("התור נתפס הרגע (" + personName(now) + "). אפשר לבחור תור אחר או להוסיף הערה."); DATA = setIn(DATA, ["bookings", vid, k], now); render(); return; } }
-    } catch (e) {}
-  }
+  if (cur && !confirm(val ? "התור תפוס על ידי " + personName(cur) + ". להחליף ל" + (val === BREAK ? "הפסקה" : personName(val)) + "?" : "לפנות את התור של " + personName(cur) + "?")) { sel.value = cur; return; }
   if (val && val !== BREAK) {
-    const v = DATA.vendors[vid], s = slotsOf(v).find(x => x.key === k);
-    if (s) {
-      const clash = [];
-      ordered(DATA.vendors).forEach(([ovid, ov]) => { if (ovid === vid) return; const ob = (DATA.bookings || {})[ovid] || {}; slotsOf(ov).forEach(os => { if (ob[os.key] === val && os.start < s.end && s.start < os.end) clash.push(vendorWhat(ov) + " " + rng(os.start, os.end)); }); });
-      if (clash.length && !confirm(personName(val) + " כבר בתור באותה שעה:\n" + clash.join("\n") + "\n\nלשבץ בכל זאת? (התור יסומן באדום)")) { sel.value = cur; return; }
-    }
+    const bk = Object.assign({}, (DATA.book || {})[vid] || {}); bk[k] = val;
+    const clash = clashesFor(val, vid, k, bk);
+    if (clash.length && !confirm(personName(val) + " כבר בתור באותה שעה:\n" + clash.join("\n") + "\n\nלשבץ בכל זאת? (התור יסומן באדום)")) { sel.value = cur; return; }
+    const shift = (isBridePid(val) !== (cur && cur !== BREAK && isBridePid(cur))) ? laterBooked(vid, k) : 0;
+    if (shift && !confirm("תור כלה נמשך שעתיים, ולכן " + plural(shift, "התור שאחריו יזוז", "התורים שאחריו יזוזו") + " בהתאם. להמשיך?")) { sel.value = cur; return; }
+    if (getIn(DATA, ["want", vid, k, val])) write("want/" + vid + "/" + k + "/" + val, null);
   }
-  write("bookings/" + vid + "/" + k, val || null);
+  write("book/" + vid + "/" + k, val || null);
+}
+async function take(vid, k){
+  const me = myPid(); if (!me) return;
+  const now = await freshSlot(vid, k);
+  if (now) { DATA = setIn(DATA, ["book", vid, k], now); render(); alert("התור נתפס הרגע (" + personName(now) + "). אפשר לבחור תור אחר או ללחוץ על השם כדי לסמן שאת מעוניינת."); return; }
+  const bk = Object.assign({}, (DATA.book || {})[vid] || {}); bk[k] = me;
+  const clash = clashesFor(me, vid, k, bk);
+  if (clash.length && !confirm("כבר יש לך תור באותה שעה:\n" + clash.join("\n") + "\n\nלתפוס בכל זאת? (התור יסומן באדום)")) return;
+  if (getIn(DATA, ["want", vid, k, me])) write("want/" + vid + "/" + k + "/" + me, null);
+  write("book/" + vid + "/" + k, me);
 }
 function onField(t){
-  const path = t.dataset.path; let val = t.type === "checkbox" ? t.checked : t.value;
-  if (t.type === "number") val = val === "" ? "" : Math.max(5, Math.min(240, Math.round(Number(val)) || 0));
+  const path = t.dataset.path; if (!canPath(path)) { render(); return; }
+  let val = t.type === "checkbox" ? t.checked : t.value;
+  if (t.type === "number") val = val === "" ? 45 : Math.max(5, Math.min(240, Math.round(Number(val)) || 45));
   if (typeof val === "string") val = val.trim();
   delete t.dataset.dirty;
   const cur = getIn(DATA, path.split("/"));
   if (cur === val) return;
   if (/^vendors\/[^/]+\/(from|to|dur)$/.test(path)) {
-    const vid = path.split("/")[1], bk = (DATA.bookings || {})[vid] || {};
+    const vid = path.split("/")[1], bk = (DATA.book || {})[vid] || {};
     const nv = Object.assign({}, DATA.vendors[vid]); nv[path.split("/")[2]] = val;
-    const keys = new Set(slotsOf(nv).map(s => s.key)), lost = Object.keys(bk).filter(k => bk[k] && bk[k] !== BREAK && !keys.has(k));
-    if (lost.length && !confirm("השינוי ישנה את שעות התורים. " + plural(lost.length, "תור תפוס אחד", "תורים תפוסים") + " (" + lost.map(k => personName(bk[k]) + " " + keyTime(k)).join(", ") + ") לא יתאימו יותר ויסומנו לבחירה מחדש.\n\nלהמשיך?")) { t.value = cur == null ? "" : cur; return; }
+    const keys = new Set(slotsOf(vid, nv).map(s => s.key)), lost = Object.keys(bk).filter(k => bk[k] && bk[k] !== BREAK && !keys.has(k));
+    if (lost.length && !confirm("אחרי השינוי " + plural(lost.length, "תור תפוס אחד", "תורים תפוסים") + " (" + lost.map(k => personName(bk[k])).join(", ") + ") כבר לא " + (lost.length === 1 ? "ייכנס" : "ייכנסו") + " בשעות העבודה.\n\nלהמשיך?")) { t.value = cur == null ? "" : cur; return; }
   }
   write(path, val);
+  if (/^vendors\/[^/]+\/kind$/.test(path)) write(path.replace(/kind$/, "role"), null);
 }
-function addNote(rk){
+function saveNote(rk){
   const [vid, k] = rk.split("|"), inp = document.getElementById("ni-" + vid + "-" + k);
   const text = inp && inp.value.trim(); if (!text) { inp && inp.focus(); return; }
   inp.value = ""; delete inp.dataset.dirty;
-  openNotes.delete(rk);
-  write("notes/" + vid + "/" + k + "/" + uid("n"), { text: text.slice(0, 300), at: Date.now() });
+  ui.openNotes.delete(rk);
+  write("notes2/" + vid + "/" + k + "/" + uid("n"), { text: text.slice(0, 300), at: Date.now(), by: ME });
 }
+function setScreen(s){ ui.screen = s; try { sessionStorage.setItem("weddingPrep-screen", s); } catch (e) {} render(); window.scrollTo(0, 0); }
+
 app.addEventListener("change", e => {
   const t = e.target;
-  if (t.matches("select.book")) onBook(t);
+  if (t.matches("select.book")) { if (isAdmin()) onAdminBook(t); else render(); }
   else if (t.dataset.path) onField(t);
 });
 app.addEventListener("input", e => { const t = e.target; if (t.dataset && (t.dataset.path || t.dataset.note)) t.dataset.dirty = "1"; });
 app.addEventListener("keydown", e => {
   const t = e.target;
-  if (e.key === "Enter" && t.dataset && t.dataset.note) { e.preventDefault(); addNote(t.dataset.note); }
+  if (e.key === "Enter" && t.dataset && t.dataset.note) { e.preventDefault(); saveNote(t.dataset.note); }
+  else if (e.key === "Escape" && t.dataset && t.dataset.note) { ui.openNotes.delete(t.dataset.note); render(); }
   else if (e.key === "Enter" && t.dataset && t.dataset.path && t.tagName === "INPUT") { t.blur(); }
 });
 app.addEventListener("click", async e => {
   const b = e.target.closest("[data-act]"); if (!b) return;
-  const d = b.dataset;
+  const d = b.dataset, me = myPid();
   switch (d.act) {
-    case "toggle-notes": {
-      if (openNotes.has(d.rk)) openNotes.delete(d.rk); else openNotes.add(d.rk);
-      render();
-      if (openNotes.has(d.rk)) { const [vid, k] = d.rk.split("|"); const el = document.getElementById("ni-" + vid + "-" + k); if (el) el.focus(); }
+    case "iam": ME = d.me; try { localStorage.setItem(ME_KEY, ME); } catch (err) {} setScreen("choose"); break;
+    case "home": setScreen("home"); break;
+    case "screen": setScreen(d.s); break;
+    case "goto": e.preventDefault(); if (ui.screen !== "full") { ui.screen = "full"; render(); } requestAnimationFrame(() => { const el = document.getElementById("v-" + d.v); if (el) el.scrollIntoView({ block: "start" }); }); break;
+    case "take": take(d.v, d.k); break;
+    case "release": if (me && getIn(DATA, ["book", d.v, d.k]) === me && confirm("לבטל את התור שלך?")) write("book/" + d.v + "/" + d.k, null); break;
+    case "release-run": {
+      const ks = d.ks.split(","), owner = getIn(DATA, ["book", d.v, ks[0]]);
+      if (!(isAdmin() || owner === me)) return;
+      if (confirm("לבטל את התור?")) ks.forEach(k => { if (getIn(DATA, ["book", d.v, k]) === owner) write("book/" + d.v + "/" + k, null); });
       break;
     }
-    case "add-note": addNote(d.rk); break;
-    case "del-note": if (confirm("למחוק את ההערה?")) write("notes/" + d.v + "/" + d.k + "/" + d.n, null); break;
-    case "clear-orphan": write("bookings/" + d.v + "/" + d.k, null); break;
-    case "add-photo": write("photo/" + uid("r"), { start: "", end: "", label: "", order: nextOrder(DATA.photo) }); break;
-    case "del-photo": if (confirm("למחוק את השורה?")) write("photo/" + d.id, null); break;
+    case "want": if (me) { const has = getIn(DATA, ["want", d.v, d.k, me]); write("want/" + d.v + "/" + d.k + "/" + me, has ? null : Date.now()); } break;
+    case "unwant": if (isAdmin() || d.p === me) write("want/" + d.v + "/" + d.k + "/" + d.p, null); break;
+    case "break": if (myVid() === d.v && !getIn(DATA, ["book", d.v, d.k])) write("book/" + d.v + "/" + d.k, BREAK); break;
+    case "unbreak": if ((myVid() === d.v || isAdmin()) && getIn(DATA, ["book", d.v, d.k]) === BREAK) write("book/" + d.v + "/" + d.k, null); break;
+    case "toggle-notes": {
+      if (ui.openNotes.has(d.rk)) ui.openNotes.delete(d.rk); else ui.openNotes.add(d.rk);
+      render();
+      if (ui.openNotes.has(d.rk)) { const [vid, k] = d.rk.split("|"); const el = document.getElementById("ni-" + vid + "-" + k); if (el) el.focus(); }
+      break;
+    }
+    case "save-note": saveNote(d.rk); break;
+    case "close-note": ui.openNotes.delete(d.rk); render(); break;
+    case "del-note": { const n = getIn(DATA, ["notes2", d.v, d.k, d.n]); if (n && (isAdmin() || n.by === ME) && confirm("למחוק את ההערה?")) write("notes2/" + d.v + "/" + d.k + "/" + d.n, null); break; }
+    case "clear-orphan": if (isAdmin() || getIn(DATA, ["book", d.v, d.k]) === me) write("book/" + d.v + "/" + d.k, null); break;
+    case "add-photo": if (isAdmin() || isPhotographer()) write("photo/" + uid("r"), { start: "", end: "", label: "", order: nextOrder(DATA.photo) }); break;
+    case "del-photo": if ((isAdmin() || isPhotographer()) && confirm("למחוק את השורה?")) write("photo/" + d.id, null); break;
     case "add-vendor": {
+      if (!isAdmin()) return;
       const id = uid("v");
-      await write("vendors/" + id, { name: "", role: "", kind: "makeup", from: "", to: "", dur: "", note: "", order: nextOrder(DATA.vendors) });
+      await write("vendors/" + id, { name: "", kind: "makeup", from: "", to: "", dur: 45, note: "", order: nextOrder(DATA.vendors) });
       requestAnimationFrame(() => { const el = document.getElementById("v-" + id + "-name"); if (el) { el.scrollIntoView({ block: "center" }); el.focus(); } });
       break;
     }
     case "del-vendor": {
-      const v = DATA.vendors[d.v], n = Object.values((DATA.bookings || {})[d.v] || {}).filter(x => x && x !== BREAK).length;
+      if (!isAdmin()) return;
+      const v = DATA.vendors[d.v], n = Object.values((DATA.book || {})[d.v] || {}).filter(x => x && x !== BREAK).length;
       if (!confirm("למחוק את הטבלה של " + (v.name || "הספקית") + "?" + (n ? "\n" + plural(n, "תור תפוס אחד יימחק", "תורים תפוסים יימחקו") + "." : ""))) return;
-      write("bookings/" + d.v, null); write("notes/" + d.v, null); write("vendors/" + d.v, null);
+      write("book/" + d.v, null); write("want/" + d.v, null); write("notes2/" + d.v, null); write("vendors/" + d.v, null);
       break;
     }
     case "add-person": {
+      if (!isAdmin()) return;
       const id = uid("p");
-      await write("people/" + id, { name: "", role: "", arrive: "", readyBy: "", order: nextOrder(DATA.people) });
+      await write("people/" + id, { name: "", role: "", group: "girl", arrive: "", readyBy: "18:00", order: nextOrder(DATA.people) });
       requestAnimationFrame(() => { const el = document.getElementById("p-" + id + "-n"); if (el) el.focus(); });
       break;
     }
     case "del-person": {
-      const used = Object.values(DATA.bookings || {}).some(m => Object.values(m || {}).includes(d.id));
+      if (!isAdmin()) return;
+      const used = Object.values(DATA.book || {}).some(m => Object.values(m || {}).includes(d.id));
       if (used) { alert("ל" + personName(d.id) + " יש תורים. קודם לפנות אותם, ואז אפשר למחוק."); return; }
       if (confirm("למחוק את " + personName(d.id) + " מהרשימה?")) write("people/" + d.id, null);
-      break;
-    }
-    case "copy": {
-      const ta = document.getElementById("export-text"), old = b.textContent;
-      try { await navigator.clipboard.writeText(ta.value); b.textContent = "הועתק ✓"; }
-      catch (err) { ta.focus(); ta.select(); b.textContent = "הטקסט סומן – אפשר להעתיק"; }
-      setTimeout(() => { b.textContent = old; }, 2000);
-      break;
-    }
-    case "share": {
-      const link = location.href.split("#")[0], old = b.textContent;
-      try { if (navigator.share) { await navigator.share({ title: document.title, url: link }); return; } await navigator.clipboard.writeText(link); b.textContent = "הקישור הועתק ✓"; }
-      catch (err) { b.textContent = link; }
-      setTimeout(() => { b.textContent = old; }, 2500);
       break;
     }
   }
 });
 document.addEventListener("visibilitychange", () => { if (!document.hidden && mode === "offline") connect(); });
+try { const s = sessionStorage.getItem("weddingPrep-screen"); if (ME && (s === "mine" || s === "full")) ui.screen = s; } catch (e) {}
 
 connect();
 })();
